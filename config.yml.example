@@ -1,0 +1,23 @@
+development:
+  adapter: mysql2
+  host: localhost
+  user: root
+  password:
+  database: reconciliation_demo_dev
+  salt: substitute_with_your_secret_salt_string
+
+test:
+  adapter: mysql2
+  host: localhost
+  user: root
+  password:
+  database: reconciliation_demo_test
+  salt: substitute_with_your_secret_salt_string
+
+production:
+  adapter: mysql2
+  host: localhost
+  user: root
+  password:
+  database: reconciliation_demo
+  salt: substitute_with_your_secret_salt_string

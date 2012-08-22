@@ -1,0 +1,21 @@
+!!! 5
+%html{:dir => "ltr"}
+  %head
+    %meta{ :charset => "UTF-8" }
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1" }
+    %link{ :href => "css/main.css", :rel => "stylesheet", :type => "text/css" }
+    = yield_content :styles
+    %link{:rel => "resource", :href=> "locale.properties", :type => "application.l10n" }
+    %script{ :src => "javascript/jquery-1.8.0.min.js", :type => "text/javascript" }
+    %script{ :src => "javascript/application.js", :type => "text/javascript" }
+    = yield_content :scripts
+
+  %body
+    - if flash[:notice]
+      #flash_notice= flash[:notice]
+    - if flash[:error]
+      #flash_error= flash[:error]
+    - if flash[:warning]
+      #flash_warning= flash[:warning]
+    #content-body= yield
+

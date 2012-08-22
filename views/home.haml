@@ -1,0 +1,7 @@
+%p
+  %form{:action => "/reconciler", :method => "post", :enctype=>"multipart/form-data", "accept-charset"=>"UTF-8"}
+    %div
+      %label{:for => 'file'} PDF
+      %input{:type => :file, :name => "file", :id => :file, :size => 30}
+    %div
+      %input.submit-button{:type => :submit, :value => "Resolve"}
