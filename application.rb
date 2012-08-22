@@ -25,7 +25,7 @@ def upload(params)
     FileUtils.mv(file[:tempfile].path, file_path)
     relative_path = file_path.split("/")[-2..-1].join("/")
     upload = Upload.create(:file_path => relative_path)
-    redirect "/reconciler?token=" + upload.token
+    redirect "/reconciler?token=" << upload.token
   else
     redirect "/", :flash => { :error => "Files must be of type PDF." }
   end

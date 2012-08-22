@@ -4,7 +4,7 @@
 - content_for :scripts do
   %script{ :src => "javascript/compatibility.js", :type => "text/javascript" }
   %script{ :src => "javascript/l10n.js", :type => "text/javascript" }
-  %script{ :src => "javascript/viewer.js", :type => "text/javascript" }
+  %script{ :src => "javascript/viewer.min.js", :type => "text/javascript" }
   %script{ :src => "javascript/build/pdfjs.min.js", :type => "text/javascript" }
   :javascript
     $.extend(Reconciler.settings, { "file" : "#{@upload[:file_path]}" });
