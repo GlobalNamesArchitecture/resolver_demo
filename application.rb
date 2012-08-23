@@ -6,48 +6,62 @@ require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 require 'builder'
 require 'uri'
-require File.join(File.dirname(__FILE__), 'environment')
 
-enable :sessions
+class ReconciliationDemo < Sinatra::Base
 
-use Rack::Timeout
-Rack::Timeout.timeout = 9_000_000
+  require File.join(File.dirname(__FILE__), 'environment')
+  
+  register Sinatra::Flash
+  helpers Sinatra::ContentFor, Sinatra::RedirectWithFlash
 
-set :haml, :format => :html5
+  use Rack::Timeout
+  Rack::Timeout.timeout = 9_000_000
 
-helpers Sinatra::ContentFor
+  enable :sessions
+  set :haml, :format => :html5
 
-def upload(params)
-  file = params[:file]
-  if file && file[:type] == 'application/pdf'
-    encoded_file_name = Upload.generate_token << ".pdf"
-    file_path = File.join([SiteConfig::upload_path] + [encoded_file_name])
-    FileUtils.mv(file[:tempfile].path, file_path)
-    relative_path = file_path.split("/")[-2..-1].join("/")
-    upload = Upload.create(:file_path => relative_path)
-    redirect "/reconciler?token=" << upload.token
-  else
-    redirect "/", :flash => { :error => "Files must be of type PDF." }
+  def upload(params)
+    file = params[:file]
+    if file && file[:type] == 'application/pdf'
+      encoded_file_name = Upload.generate_token << ".pdf"
+      file_path = File.join([SiteConfig::upload_path] + [encoded_file_name])
+      FileUtils.mv(file[:tempfile].path, file_path)
+      relative_path = file_path.split("/")[-2..-1].join("/")
+      upload = Upload.create(:file_path => relative_path)
+      redirect "/reconciler?token=" << upload.token
+    else
+      redirect "/", :flash => { :error => "Files must be of type PDF." }
+    end
   end
-end
 
-get "/" do
-  haml :home
-end
-
-get "/reconciler" do
-  if params[:token]
-      @upload = Upload.find_by_token(params[:token])
-      not_found if @upload.nil?
-      haml :reconciler
+  get "/" do
+    haml :home
   end
-end
 
-post "/reconciler" do
-  upload(params)
-end
+  get "/reconciler" do
+    if params[:token]
+        @upload = Upload.find_by_token(params[:token])
+        not_found if @upload.nil?
+        haml :reconciler
+    else
+      not_found
+    end
+  end
 
-not_found do
-  flash.sweep
-  haml :'404'
+  post "/reconciler" do
+    upload(params)
+  end
+
+  not_found do
+    flash.sweep
+    haml :'404'
+  end
+
+  after do
+    Cleaner.run
+    ActiveRecord::Base.clear_active_connections!
+  end
+
+  run! if app_file == $0
+
 end

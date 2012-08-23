@@ -16,10 +16,10 @@ gem 'builder'
 gem 'rest-client'
 gem 'mysql2'
 gem "activerecord"
+gem "sanitize"
 
 group :development, :test do
   gem 'debugger'
-  gem 'capybara'
   gem 'rake'
 end
 
@@ -28,5 +28,7 @@ group :production do
 end
 
 group :test do
-  gem 'turn', '0.8.2', :require => false
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'capybara-webkit'
 end

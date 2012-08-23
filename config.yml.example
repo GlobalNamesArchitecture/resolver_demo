@@ -5,6 +5,8 @@ development:
   password:
   database: reconciliation_demo_dev
   salt: substitute_with_your_secret_salt_string
+  gnrd_url: http://gnrd.globalnames.org/name_finder.json
+  resolver_url: http://resolver.globalnames.org/name_resolvers.json
 
 test:
   adapter: mysql2
@@ -13,6 +15,8 @@ test:
   password:
   database: reconciliation_demo_test
   salt: substitute_with_your_secret_salt_string
+  gnrd_url: http://gnrd.globalnames.org/name_finder.json
+  resolver_url: http://resolver.globalnames.org/name_resolvers.json
 
 production:
   adapter: mysql2
@@ -21,3 +25,5 @@ production:
   password:
   database: reconciliation_demo
   salt: substitute_with_your_secret_salt_string
+  gnrd_url: http://gnrd.globalnames.org/name_finder.json
+  resolver_url: http://resolver.globalnames.org/name_resolvers.json
