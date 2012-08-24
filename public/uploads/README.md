@@ -1,1 +1,1 @@
-Make directory writeable.
+Make this directory writeable.
