@@ -591,7 +591,6 @@
        });
 
        self.setInitialView(storedHash, scale);
-       Reconciler.initialize(self);
      });
 
      pdfDocument.getMetadata().then(function(data) {
@@ -639,6 +638,7 @@
        this.parseScale(kDefaultScale, true);
      }
 
+     Reconciler.initialize(this);
    },
 
    renderHighestPriority: function pdfViewRenderHighestPriority() {
