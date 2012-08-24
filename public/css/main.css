@@ -6,6 +6,13 @@ h1 {
   vertical-align:middle;
 }
 
+.notFound {
+  color:#F3F3F3;
+  font-size: 16px;
+  height:32px;
+  line-height:32px;
+  margin:20px 0 20px 100px;
+}
 .highlight{background-color:#ffff00;color:#000;}
 
 #nameLoader{
