@@ -5,11 +5,11 @@
   %script{ :src => "javascript/jquery.highlight.min.js", :type => "text/javascript" }
   %script{ :src => "javascript/compatibility.js", :type => "text/javascript" }
   %script{ :src => "javascript/l10n.js", :type => "text/javascript" }
-  %script{ :src => "javascript/viewer.js", :type => "text/javascript" }
+  %script{ :src => "javascript/viewer.min.js", :type => "text/javascript" }
   %script{ :src => "javascript/build/pdfjs.min.js", :type => "text/javascript" }
   :javascript
     PDFJS.workerSrc = 'javascript/build/pdfjs.min.js'
-    $.extend(Reconciler.settings, { "token" : "#{@upload[:token]}", "file" : "#{@upload[:file_path]}", "gnrd_url" : "#{@upload[:gnrd_url]}" });
+    $.extend(Reconciler.settings, { "token" : "#{@upload[:token]}", "file" : "#{@upload[:file_path]}" });
 
 #outerContainer
 
@@ -20,12 +20,15 @@
         %span{'data-l10n-id' => 'thumbs_label'} Thumbnails
       %button#viewOutline{:class => 'toolbarButton group', :title => 'Show Document Outline', :onclick => 'PDFView.switchSidebarView(\'outline\');', :tabindex => '2', 'data-l10n-id' => 'outline'}
         %span{'data-l10n-id' => 'outline_label'} Document Outline
-      %button#viewSearch{:class => 'toolbarButton group', :title => 'Search Document', :onclick => 'PDFView.switchSidebarView(\'search\');', :tabindex => '3', 'data-l10n-id' => 'search_panel'}
+      %button#viewNames{:class => 'toolbarButton group', :title => 'Show Names', :onclick => 'PDFView.switchSidebarView(\'names\');', :tabindex => '3', 'data-l10n-id' => 'names_panel'}
+        %span{'data-l10n-id' => 'names_panel_label'} Show Names
+      %button#viewSearch{:class => 'toolbarButton group', :title => 'Search Document', :onclick => 'PDFView.switchSidebarView(\'search\');', :tabindex => '4', 'data-l10n-id' => 'search_panel'}
         %span{'data-l10n-id' => 'search_panel_label'} Search Document
 
     #sidebarContent
       #thumbnailView
       #outlineView.hidden
+      #namesView.hidden
       #searchView.hidden
         #searchToolbar
           %input{:id => 'searchTermsInput', :class => 'toolbarField', :onkeydown => 'if (event.keyCode == 13) { PDFView.search(); }'}

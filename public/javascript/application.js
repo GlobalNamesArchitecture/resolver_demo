@@ -7,34 +7,35 @@ $(function() {
   "use strict";
 
   Reconciler.vars = {
-    pageText       : "",
+    viewer          : {},
+    pageText        : "",
+    foundNames      : false,
     identifiedNames : []
   };
 
-  Reconciler.viewer = {};
-
   Reconciler.initialize = function(obj) {
-    this.viewer = obj;
+    this.vars.viewer = obj;
     this.getPageText();
-    if(this.settings.gnrd_url) {
-       this.getNames();
-    }
+    this.getNames(0);
   };
 
-  Reconciler.getNames = function() {
+  Reconciler.getNames = function(counter) {
     var self = this;
 
     $.ajax({
-      type  : 'GET',
-      async : true,
-      url   : this.settings.gnrd_url,
-      dataType : 'jsonp',
-      success : function(response) {
+      type     : 'GET',
+      async    : true,
+      url      : '/get_names?token=' + self.settings.token,
+      dataType : 'json',
+      timeout  : 8000,
+      success  : function(response) {
         self.buildNames(response);
+        self.vars.foundNames = true;
       },
       error : function(xhr, ajaxOptions, thrownError) {
-        if(xhr.status === '404') {
-          self.postPageText();
+        if(ajaxOptions === 'timeout' && counter < 10) {
+          counter++;
+          self.getNames(counter);
         }
       }
     });
@@ -43,13 +44,10 @@ $(function() {
   Reconciler.getPageText = function() {
     var self = this;
 
-    self.viewer.extractText();
+    self.vars.viewer.extractText();
     setTimeout(function checkforText() {
-      if(self.viewer.pageText[self.viewer.pages.length-1]) {
-        self.setPageText(self.viewer.pageText.join());
-        if(!self.settings.gnrd_url) {
-          self.postPageText();
-        }
+      if(self.vars.viewer.pageText[self.vars.viewer.pages.length-1]) {
+        self.setPageText(self.vars.viewer.pageText.join());
       } else {
         setTimeout(checkforText, 10);
       }
@@ -58,26 +56,6 @@ $(function() {
 
   Reconciler.setPageText = function(value) {
     this.vars.pageText = value;
-  };
-
-  Reconciler.postPageText = function() {
-   var self = this;
-
-   $.ajax({
-     type  : 'POST',
-     async : true,
-     url   : '/reconciler',
-     data  : { 'text' : this.vars.pageText, 'token' : self.settings.token },
-     dataType : 'json',
-     success : function(response) {
-       if(response) {
-         self.buildNames(response);
-       }
-     },
-     error : function(xhr, ajaxOptions, thrownError) {
-       //TODO
-     }
-   });
   };
 
   Reconciler.buildNames = function(response) {
@@ -95,26 +73,47 @@ $(function() {
     return 0;
   };
 
+  //TODO
   Reconciler.highlight = function(obj) {
   var self = this,
       children = $('#' + obj.el.id).find(".textLayer").children().size();
+  };
 
-console.log(obj);
+  Reconciler.renderNames = function() {
+    var self = this,
+        nameResults = $('#namesView').removeAttr('hidden'),
+        searchPanel = $('#viewSearch'),
+        searchInput = $('#searchTermsInput'),
+        searchButton = $('#searchButton'),
+        item = '';
 
-/*
- if(children === 0) {
-   setTimeout(function checkForText() {
-     var textLayer = $('#' + obj.el.id).find(".textLayer");
-     if(textLayer.children().size() > 0) {
-       textLayer.highlight(self.vars.identifiedNames, { wordsOnly : true });
-     } else {
-       setTimeout(checkForText, 10);
-     }
-   }, 10);
- }
-    if(!this.vars.identifiedNames) { return; }
-    $('#' + obj.el.id.toString()).highlight(this.vars.identifiedNames, { wordsOnly : true });
-*/
+    if(nameResults.attr("data-status") === "complete") { return; }
+
+    nameResults.append('<div class="looking">Looking for names...</div>');
+
+    setTimeout(function appendNames() {
+      if(self.vars.foundNames) {
+        nameResults.find(".looking").remove();
+        if(self.vars.identifiedNames.length > 0) {
+          $.each(self.vars.identifiedNames.sort(), function() {
+            item = $('<a href="#">' + this + '</a>');
+            nameResults.append(item);
+            $(item).click(function(e) {
+              e.preventDefault();
+              searchPanel.trigger('click');
+              searchInput.val($(this).text());
+              searchButton.trigger('click');
+            });
+          });
+        } else {
+          nameResults.append('<div class="nothing">No names found</div>');
+        }
+        nameResults.attr("data-status", "complete");
+      } else {
+        setTimeout(appendNames, 10);
+      }
+    }, 10)
+
   };
 
 });

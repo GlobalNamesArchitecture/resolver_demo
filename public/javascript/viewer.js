@@ -821,18 +821,22 @@
      var thumbsView = document.getElementById('thumbnailView'),
          outlineView = document.getElementById('outlineView'),
          searchView = document.getElementById('searchView'),
+         namesView = document.getElementById('namesView'),
          thumbsButton = document.getElementById('viewThumbnail'),
          outlineButton = document.getElementById('viewOutline'),
-         searchButton = document.getElementById('viewSearch');
+         searchButton = document.getElementById('viewSearch'),
+         namesButton = document.getElementById('viewNames');
 
      switch (view) {
        case 'thumbs':
          thumbsButton.classList.add('toggled');
          outlineButton.classList.remove('toggled');
          searchButton.classList.remove('toggled');
+         namesButton.classList.remove('toggled');
          thumbsView.classList.remove('hidden');
          outlineView.classList.add('hidden');
          searchView.classList.add('hidden');
+         namesView.classList.add('hidden');
          PDFView.renderHighestPriority();
          break;
 
@@ -840,9 +844,11 @@
          thumbsButton.classList.remove('toggled');
          outlineButton.classList.add('toggled');
          searchButton.classList.remove('toggled');
+         namesButton.classList.remove('toggled');
          thumbsView.classList.add('hidden');
          outlineView.classList.remove('hidden');
          searchView.classList.add('hidden');
+         namesView.classList.add('hidden');
 
          if (outlineButton.getAttribute('disabled')) { return; }
          break;
@@ -851,14 +857,29 @@
          thumbsButton.classList.remove('toggled');
          outlineButton.classList.remove('toggled');
          searchButton.classList.add('toggled');
+         namesButton.classList.remove('toggled');
          thumbsView.classList.add('hidden');
          outlineView.classList.add('hidden');
          searchView.classList.remove('hidden');
+         namesView.classList.add('hidden');
 
          var searchTermsInput = document.getElementById('searchTermsInput');
          searchTermsInput.focus();
          // Start text extraction as soon as the search gets displayed.
          this.extractText();
+         break;
+
+       case 'names':
+         thumbsButton.classList.remove('toggled');
+         outlineButton.classList.remove('toggled');
+         searchButton.classList.remove('toggled');
+         namesButton.classList.add('toggled');
+         thumbsView.classList.add('hidden');
+         outlineView.classList.add('hidden');
+         searchView.classList.add('hidden');
+         namesView.classList.remove('hidden');
+
+         this.renderNames();
          break;
      }
    },
@@ -879,6 +900,10 @@
        );
      }
      extractPageText(0);
+   },
+
+   renderNames: function() {
+     Reconciler.renderNames();
    },
 
    getVisiblePages: function pdfViewGetVisiblePages() {

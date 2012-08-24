@@ -6,6 +6,7 @@ require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 require 'builder'
 require 'uri'
+require 'json'
 
 class ReconciliationDemo < Sinatra::Base
 
@@ -19,54 +20,6 @@ class ReconciliationDemo < Sinatra::Base
 
   enable :sessions
   set :haml, :format => :html5
-  
-  @names = []
-
-  def upload(params)
-    file = params[:file]
-    if file && file[:type] == 'application/pdf'
-      encoded_file_name = Upload.generate_token << ".pdf"
-      file_path = File.join([SiteConfig::upload_path] + [encoded_file_name])
-      FileUtils.mv(file[:tempfile].path, file_path)
-      relative_path = file_path.split("/")[-2..-1].join("/")
-      upload = Upload.create(:file_path => relative_path)
-      redirect "/reconciler?token=" << upload.token
-    elsif params[:text] && params[:token]
-      send_text(params)
-    else
-      redirect "/", :flash => { :error => "Files must be of type PDF." }
-    end
-  end
-  
-  def send_text(params)
-      params.merge({ :verbatim => true })
-      res = RestClient.post(SiteConfig::gnrd_url, params) do |response, request, result, &block|
-        if [302, 303].include? response.code
-          save_location(params[:token], response.headers[:location])
-          poll_names(response.headers[:location])
-          content_type 'application/json', :charset => 'utf-8'
-          JSON.dump({ :names => @names })
-        else
-          #TODO
-        end
-      end
-  end
-  
-  def save_location(token, url)
-    upload = Upload.find_by_token(token)
-    not_found if upload.nil?
-    upload.gnrd_url = url
-    upload.save!
-  end
-  
-  def poll_names(url)
-    res = nil
-    until res
-      sleep(2)
-      res = JSON.parse(RestClient.get(url), :symbolize_names => true)[:names]
-    end
-    @names = res
-  end
 
   get "/" do
     haml :home
@@ -86,14 +39,54 @@ class ReconciliationDemo < Sinatra::Base
     upload(params)
   end
 
-  not_found do
+  get "/get_names.?:format?" do
+    if params[:token]
+      @upload = Upload.find_by_token(params[:token])
+      return page_not_found(params[:format]) if @upload.nil?
+      content_type :json
+      @upload.get_names
+    else
+      page_not_found(params[:format])
+    end
+  end
+
+  def upload(params)
+    file = params[:file]
+    if file && file[:type] == 'application/pdf'
+      encoded_file_name = Upload.generate_token << ".pdf"
+      file_path = File.join([SiteConfig::upload_path] + [encoded_file_name])
+      FileUtils.mv(file[:tempfile].path, file_path)
+      relative_path = file_path.split("/")[-2..-1].join("/")
+      upload = Upload.create(:file_path => relative_path)
+      redirect "/reconciler?token=" << upload.token
+    else
+      redirect "/", :flash => { :error => "Files must be of type PDF." }
+    end
+  end
+  
+  def page_not_found(format = nil)
     flash.sweep
-    haml :'404'
+    case format
+      when 'json'
+        @output = 'Not found'
+        status 404
+        content_type :json
+        JSON.dump({:status => status, :error => @output})
+      else
+        not_found
+    end
   end
 
   after do
     Cleaner.run
     ActiveRecord::Base.clear_active_connections!
+  end
+
+  not_found do
+    if @output.nil?
+      flash.sweep
+      haml :'404'
+    end
   end
 
   run! if app_file == $0

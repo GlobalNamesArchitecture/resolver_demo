@@ -42,6 +42,7 @@ namespace :db do
   require 'active_record'
   conf = YAML.load(open(File.join(File.expand_path(File.dirname(__FILE__)), 'config.yml')).read)
   desc "Migrate the database"
+  
   task(:migrate => :environment) do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
