@@ -16,4 +16,25 @@ describe Upload do
     page.should have_content("Congratulations")
     page.should have_content("Yukon")
   end
+
+  it "should upload a PDF with names and have them recognized", :js => true do
+    visit "/"
+    find("#file").should be_true
+    file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_with_names.pdf')
+    attach_file "file", file_path
+    click_button "Resolve"
+    page.execute_script(<<-JAVASCRIPT)
+      $('#sidebarToggle').trigger('click');
+      $('#viewNames').trigger('click');
+JAVASCRIPT
+    names_viewer = "#namesView"
+    find(names_viewer).should have_content("Looking for names...")
+    name = false
+    until name
+      html = Capybara::Node::Simple.new(body)
+      name = html.find(names_viewer).text.include? "Bulimulus"
+    end
+    find(names_viewer).text.should include("Bulimulus")
+  end
+  
 end
