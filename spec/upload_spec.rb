@@ -12,7 +12,7 @@ describe Upload do
     find("#file").should be_true
     file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_file.pdf')
     attach_file "file", file_path
-    click_button "Resolve"
+    click_button "Resolve Names"
     page.should have_content("Congratulations")
     page.should have_content("Yukon")
   end
@@ -22,7 +22,7 @@ describe Upload do
     find("#file").should be_true
     file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_with_names.pdf')
     attach_file "file", file_path
-    click_button "Resolve"
+    click_button "Resolve Names"
     page.execute_script(<<-JAVASCRIPT)
       $('#sidebarToggle').trigger('click');
       $('#viewNames').trigger('click');

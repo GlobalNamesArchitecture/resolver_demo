@@ -31,6 +31,7 @@ $(function() {
       success  : function(response) {
         self.buildNames(response);
         self.vars.foundNames = true;
+        $('#nameLoader').fadeOut();
       },
       error : function(xhr, ajaxOptions, thrownError) {
         if(ajaxOptions === 'timeout' && counter < 10) {

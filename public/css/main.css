@@ -1,1 +1,67 @@
+h1 {
+  color:#F3F3F3;
+  margin:20px 0 20px 100px;
+  line-height:32px;
+  height:32px;
+  vertical-align:middle;
+}
+
 .highlight{background-color:#ffff00;color:#000;}
+
+#nameLoader{
+  margin-right:20px;
+  padding-left:20px;
+  background-image:url(../images/throbber.gif);
+  background-position:0 50%;
+  background-repeat:no-repeat no-repeat;
+}
+
+#uploadForm {
+  color:#F3F3F3;
+  width:500px;
+  margin-left:200px;
+}
+
+#uploadForm form > div {
+  line-height:40px;
+  height:40px;
+  font-size:24px;
+}
+
+#uploadForm input {
+  vertical-align:middle;
+}
+
+.green-submit {
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  box-shadow: 0 1px 1px 0 rgba(26, 26, 26, 0.6) inset;
+  -moz-box-shadow: 0 1px 1px 0 rgba(26, 26, 26, 0.6) inset;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(26, 26, 26, 0.6) inset;
+  border: 0 solid rgb(15, 18, 21) !important;
+  min-height: 38px;
+  padding: 7px 15px !important;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25) !important;
+  border: 0;
+  color: #fff;
+  float: left;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 15px 5px;
+  background: #5aa52b;
+  background: -moz-linear-gradient(center bottom, rgb(27,112,4) 4%, rgb(90,165,43) 58%, rgb(144,207,76) 98%) !important;
+  background: -webkit-gradient(linear,left bottom,left top, color-stop(0.04, rgb(27,112,4)), color-stop(0.58, rgb(90,165,43)), color-stop(0.98, rgb(144,207,76))) !important;
+}
+
+.green-submit:hover {
+  box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
+  -moz-box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
+  -webkit-box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
+}
+
+#flash_error {
+  color:yellow;
+  font-weight:bold;
+  font-size:20px;
+}

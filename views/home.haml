@@ -1,7 +1,27 @@
-%p
-  %form{:action => "/reconciler", :method => "post", :enctype=>"multipart/form-data", "accept-charset"=>"UTF-8"}
-    %div
-      %label{:for => 'file'} PDF
-      %input{:type => :file, :name => "file", :id => :file, :size => 30}
-    %div
-      %input.submit-button{:type => :submit, :value => "Resolve"}
+#outerContainer
+
+  #mainContainer
+    %div.toolbar
+      #toolbarContainer
+        #toolbarViewer
+          #toolbarViewerLeft
+          #toolbarViewerRight
+          .outerCenter
+            %div{:id => 'toolbarViewerMiddle', :class => 'innerCenter'}
+    #viewerContainer
+      #viewer
+        %h1 GlobalNames Reconciliation Demo
+        #uploadForm
+          - if flash[:notice]
+            #flash_notice= flash[:notice]
+          - if flash[:error]
+            #flash_error= flash[:error]
+          - if flash[:warning]
+            #flash_warning= flash[:warning]
+
+          %form{:action => "/reconciler", :method => "post", :enctype=>"multipart/form-data", "accept-charset"=>"UTF-8"}
+            %div
+              %label{:for => 'file'} PDF
+              %input{:type => :file, :name => "file", :id => :file, :size => 30}
+            %div
+              %input{:class => 'submit-button green-submit', :type => :submit, :value => "Resolve Names"}
