@@ -938,7 +938,7 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   font-size: smaller;
 }
 
-#namesView > a {
+#namesView > a, #namesView > div {
   text-decoration: none;
   display: inline-block;
   min-width: 95%;
