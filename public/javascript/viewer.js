@@ -1,11 +1,5 @@
 /*global PDFJS, escape, unescape, error, console, prompt, FirefoxCom, Element, Object, object, Stats, Reconciler, PDFBug */
 
-(function() {
-
-  "use strict";
-
-}());
-
  var kDefaultURL = '',
      kDefaultScale = 'auto',
      kDefaultScaleDelta = 1.1,
@@ -597,6 +591,7 @@
        });
 
        self.setInitialView(storedHash, scale);
+       Reconciler.initialize(self);
      });
 
      pdfDocument.getMetadata().then(function(data) {
@@ -618,6 +613,7 @@
        if (pdfTitle) {
          document.title = pdfTitle + ' - ' + document.title;
        }
+
      });
    },
 
@@ -642,6 +638,7 @@
        // Setting the default one.
        this.parseScale(kDefaultScale, true);
      }
+
    },
 
    renderHighestPriority: function pdfViewRenderHighestPriority() {
@@ -1321,6 +1318,7 @@
          cont();
        }
      };
+
      this.pdfPage.render(renderContext).then(
        function pdfPageRenderCallback() {
          pageViewDrawCallback(null);
@@ -1469,7 +1467,7 @@
          cont();
        }
      };
-     pdfPage.render(renderContext).then(
+     this.pdfPage.render(renderContext).then(
        function pdfPageRenderCallback() {
          self.renderingState = RenderingStates.FINISHED;
          callback();
@@ -1479,8 +1477,10 @@
          callback();
        }
      );
+
      this.hasImage = true;
    };
+
 
    this.setImage = function thumbnailViewSetImage(img) {
      if (this.hasImage || !img) {
@@ -1684,8 +1684,6 @@
    evt = null;
    PDFView.initialize();
 
-   var file = Reconciler.settings.file || kDefaultURL;
-
    if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
      document.getElementById('openFile').setAttribute('hidden', 'true');
    } else {
@@ -1754,7 +1752,10 @@
        PDFView.sidebarOpen = outerContainer.classList.contains('sidebarOpen');
        PDFView.renderHighestPriority();
      });
+
+   var file = Reconciler.settings.file || kDefaultURL;
    PDFView.open(file, 0);
+
  }, true);
 
  function updateViewarea() {

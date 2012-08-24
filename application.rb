@@ -19,6 +19,8 @@ class ReconciliationDemo < Sinatra::Base
 
   enable :sessions
   set :haml, :format => :html5
+  
+  @names = []
 
   def upload(params)
     file = params[:file]
@@ -29,9 +31,41 @@ class ReconciliationDemo < Sinatra::Base
       relative_path = file_path.split("/")[-2..-1].join("/")
       upload = Upload.create(:file_path => relative_path)
       redirect "/reconciler?token=" << upload.token
+    elsif params[:text] && params[:token]
+      send_text(params)
     else
       redirect "/", :flash => { :error => "Files must be of type PDF." }
     end
+  end
+  
+  def send_text(params)
+      params.merge({ :verbatim => true })
+      res = RestClient.post(SiteConfig::gnrd_url, params) do |response, request, result, &block|
+        if [302, 303].include? response.code
+          save_location(params[:token], response.headers[:location])
+          poll_names(response.headers[:location])
+          content_type 'application/json', :charset => 'utf-8'
+          JSON.dump({ :names => @names })
+        else
+          #TODO
+        end
+      end
+  end
+  
+  def save_location(token, url)
+    upload = Upload.find_by_token(token)
+    not_found if upload.nil?
+    upload.gnrd_url = url
+    upload.save!
+  end
+  
+  def poll_names(url)
+    res = nil
+    until res
+      sleep(2)
+      res = JSON.parse(RestClient.get(url), :symbolize_names => true)[:names]
+    end
+    @names = res
   end
 
   get "/" do

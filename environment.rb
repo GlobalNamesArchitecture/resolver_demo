@@ -8,26 +8,27 @@ require 'logger'
 require 'sinatra'
 require 'sinatra/content_for'
 require 'sanitize'
+require 'rest_client'
 
 #set environment
 environment = ENV["RACK_ENV"] || ENV["RAILS_ENV"]
 environment = (environment && ["production", "test", "development"].include?(environment.downcase)) ? environment.downcase.to_sym : :development
 
-ReconciliationDemo.environment = environment
+Sinatra::Base.environment = environment
 
 #set encoding
 Encoding.default_external = "UTF-8"
 
 #configure
-root_path = ReconciliationDemo.root
-conf = YAML.load(open(File.join(root_path, 'config.yml')).read)[ReconciliationDemo.environment.to_s]
+root_path = File.expand_path(File.dirname(__FILE__))
+conf = YAML.load(open(File.join(root_path, 'config.yml')).read)[Sinatra::Base.environment.to_s]
 configure do
   SiteConfig = OpenStruct.new(
                  :host => conf.delete('host') || '0.0.0.0',
                  :root_path => root_path,
                  :upload_path => File.join(root_path, "public", "uploads"),
                  :salt => conf.delete('salt'),
-                 :grnd_url => conf.delete('gnrd_url') || "http://gnrd.globalnames.org/name_finder.json",
+                 :gnrd_url => conf.delete('gnrd_url') || "http://gnrd.globalnames.org/name_finder.json",
                  :resolver_url => conf.delete('resolver_url') || "http://resolver.globalnames.org/name_resolvers.json",
                  :cleaner_period => 7,
                )

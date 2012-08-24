@@ -16,7 +16,8 @@ gem 'builder'
 gem 'rest-client'
 gem 'mysql2'
 gem "activerecord"
-gem "sanitize"
+gem 'sanitize'
+gem 'rest-client'
 
 group :development, :test do
   gem 'debugger'
