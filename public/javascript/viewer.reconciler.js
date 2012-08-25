@@ -7,12 +7,13 @@ $(function() {
   "use strict";
 
   Reconciler.status = {
-    "init"      : 0,
-    "sent"      : 1,
-    "busy"      : 2,
-    "found"     : 3,
-    "resolved"  : 4,
-    "failed"    : 5
+    "init"         : 0,
+    "find_sent"    : 1,
+    "find_busy"    : 2,
+    "found"        : 3,
+    "resolve_sent" : 4,
+    "resolved"     : 5,
+    "failed"       : 6
   };
 
   Reconciler.vars = {
@@ -52,13 +53,9 @@ $(function() {
       timeout  : self.vars.timeout,
       success  : function(response) {
         self.updateStatus(response.status);
-        if(response.status === self.status.busy) {
-          setTimeout(function() { self.getNames(0); }, self.vars.timeout);
-        } else if (response.status === self.status.resolved) {
+        if(response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
-        } else {
-          self.updateStatus(Reconciler.status.failed);
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -73,27 +70,36 @@ $(function() {
   };
 
   Reconciler.updateStatus = function(status) {
+    var self = this,
+        loader = $('#nameLoader'),
+        viewer = $('#namesView');
+
     switch(status) {
-      case Reconciler.status.sent:
+      case this.status.find_sent:
+      case this.status.find_busy:
+        setTimeout(function() { self.getNames(0); }, self.vars.timeout);
         break;
-      case Reconciler.status.found:
-        $('#nameLoader').text("Resolving names...");
-        $('#namesView').text("Resolving names...");
+      case this.status.found:
+        loader.text("Found names...");
+        viewer.text("Found names...");
+        setTimeout(function () { self.getNames(0); }, self.vars.timeout);
         break;
-      case Reconciler.status.resolved:
-        this.hideLoaders();
+      case this.status.resolve_sent:
+        loader.text("Resolving names...");
+        viewer.text("Resolving names...");
+        setTimeout(function () { self.getNames(0); }, self.vars.timeout);
         break;
-      case Reconciler.status.failed:
-        this.hideLoaders();
+      case this.status.resolved:
+        loader.text("Resolved names...");
+        viewer.text("Resolved names...");
+        loader.hide();
+        break;
+      case this.status.failed:
+        loader.hide();
         $('#nameLoaderFailed').show();
-        $('#namesView').find(".failed").show();
+        viewer.find(".looking").hide().end().find(".failed").show();
         break;
     }
-  };
-
-  Reconciler.hideLoaders = function() {
-    $('#nameLoader').hide();
-    $('#namesView').find(".looking").hide();
   };
 
   Reconciler.buildNames = function(response) {
