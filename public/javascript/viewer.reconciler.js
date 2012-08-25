@@ -71,6 +71,7 @@ $(function() {
 
   Reconciler.updateStatus = function(status) {
     var self = this,
+        text = "",
         loader = $('#nameLoader'),
         viewer = $('#namesView');
 
@@ -80,18 +81,18 @@ $(function() {
         setTimeout(function() { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.found:
-        loader.text("Found names...");
-        viewer.text("Found names...");
+        text = mozL10n.get('found_names', null, 'Found names...');
+        loader.text(text);
+        viewer.text(text);
         setTimeout(function () { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.resolve_sent:
-        loader.text("Resolving names...");
-        viewer.text("Resolving names...");
+        text = mozL10n.get('resolving_names', null, 'Resolving names...');
+        loader.text(text);
+        viewer.text(text);
         setTimeout(function () { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.resolved:
-        loader.text("Resolved names...");
-        viewer.text("Resolved names...");
         loader.hide();
         break;
       case this.status.failed:

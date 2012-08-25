@@ -37,8 +37,8 @@ class Upload < ActiveRecord::Base
     end
   end
   
-  def set_status(status)
-    self.status = status
+  def set_status(new_status)
+    self.status = new_status
     self.save!
   end
 
