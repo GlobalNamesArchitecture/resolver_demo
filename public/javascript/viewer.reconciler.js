@@ -16,14 +16,15 @@ $(function() {
     this.getNames(0);
   };
 
+//TODO: text indexing not working
   Reconciler.activateNamesButton = function() {
-    $('#viewNames').click(function(e) {
-      e.preventDefault();
-      PDFView.extractText();
-      $('#toolbarSidebar').children().removeClass('toggled');
-      $('#sidebarContent').children().addClass('hidden');
-      $(this).addClass('toggled');
-      $('#namesView').removeClass('hidden');
+    $.each($('#toolbarSidebar').children(), function(i) {
+      $(this).click(function(e) {
+        e.preventDefault();
+        if($(this).attr("id") === 'viewNames') { PDFView.extractText(); }
+        $(this).addClass('toggled').siblings().removeClass('toggled');
+        $('#sidebarContent').children().eq(i).show().siblings().hide();
+      });
     });
   }
 
@@ -39,7 +40,6 @@ $(function() {
       success  : function(response) {
         self.buildNames(response);
         self.renderNames();
-        $('#nameLoader').fadeOut();
       },
       error : function(xhr, ajaxOptions, thrownError) {
         if(ajaxOptions === 'timeout' && counter < 10) {
@@ -66,6 +66,7 @@ $(function() {
     return 0;
   };
 
+  //TODO: why is this a timeout?
   Reconciler.renderNames = function() {
     var self = this,
         namesButton = $('#viewNames'),
@@ -75,32 +76,26 @@ $(function() {
         searchButton = $('#searchButton'),
         item = '';
 
-    if(namesView.attr("data-status") === "complete") { return; }
+    $('#nameLoader').fadeOut();
+    namesView.find(".looking").fadeOut();
 
-    setTimeout(function appendNames() {
-      if(self.vars.names_found) {
-        namesView.find(".looking").fadeOut();
-        if(self.vars.verbatim.length > 0) {
-          $.each(self.vars.verbatim.sort(), function() {
-            item = $('<a href="#">' + this + '</a>');
-            namesView.append(item);
-            $(item).click(function(e) {
-              e.preventDefault();
-              namesView.addClass('hidden');
-              namesButton.removeClass('toggled');
-              searchPanel.trigger('click');
-              searchInput.val($(this).text());
-              searchButton.trigger('click');
-            });
-          });
-        } else {
-          namesView.find(".nothing").show();
-        }
-        namesView.attr("data-status", "complete");
-      } else {
-        setTimeout(appendNames, 10);
-      }
-    }, 10)
+    if(self.vars.verbatim.length === 0) {
+      namesView.find(".noResults").show();
+      return;
+    }
+
+    $.each(self.vars.verbatim.sort(), function() {
+      item = $('<a href="#">' + this + '</a>');
+      namesView.append(item);
+      $(item).click(function(e) {
+        e.preventDefault();
+        namesView.addClass('hidden');
+        namesButton.removeClass('toggled');
+        searchPanel.trigger('click');
+        searchInput.val($(this).text());
+        searchButton.trigger('click');
+      });
+    });
 
   };
 

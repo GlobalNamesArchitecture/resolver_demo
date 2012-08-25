@@ -927,48 +927,6 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
   font-size: smaller;
 }
 
-#namesView {
-  overflow: auto;
-  position: absolute;
-  top: 10px;
-  bottom: 0px;
-  left: 0px;
-  right: 0;
-  padding: 4px 4px 0;
-  font-size: smaller;
-}
-
-#namesView > a, #namesView > div {
-  text-decoration: none;
-  display: inline-block;
-  min-width: 95%;
-  height: 20px;
-  padding: 2px 0 0 10px;
-  margin-bottom: 1px;
-  border-radius: 2px;
-  color: hsla(0,0%,100%,.8);
-  font-size: 13px;
-  line-height: 15px;
-  -moz-user-select:none;
-  cursor: default;
-  white-space: nowrap;
-}
-
-#namesView > a:hover {
-  background-color: hsla(0,0%,100%,.02);
-  background-image: -moz-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,100%,0));
-  background-clip: padding-box;
-  box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset,
-              0 0 1px hsla(0,0%,100%,.2) inset,
-              0 0 1px hsla(0,0%,0%,.2);
-  color: hsla(0,0%,100%,.9);
-}
-
-#namesView .nothing {
-  font-style: italic;
-}
-
-
 #sidebarControls {
   position:absolute;
   width: 180px;

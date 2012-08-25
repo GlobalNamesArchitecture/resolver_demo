@@ -30,8 +30,8 @@
       #thumbnailView
       #outlineView.hidden
       #namesView.hidden
-        div.looking Finding names...
-        %div{:class => 'nothing hidden'} No names found
+        .looking Finding names...
+        %div{:class => 'noResults'} No Names Found
       #searchView.hidden
         #searchToolbar
           %input{:id => 'searchTermsInput', :class => 'toolbarField', :onkeydown => 'if (event.keyCode == 13) { PDFView.search(); }'}
