@@ -94,6 +94,7 @@ $(function() {
         break;
       case this.status.resolved:
         loader.hide();
+        viewer.find(".looking").hide();
         break;
       case this.status.failed:
         loader.hide();
