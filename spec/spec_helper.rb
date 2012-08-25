@@ -6,7 +6,6 @@ require 'capybara/dsl'
 require 'capybara/rspec'
 require 'capybara-webkit'
 require 'database_cleaner'
-require 'sanitize'
 
 require_relative '../application.rb'
 

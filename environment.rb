@@ -1,13 +1,11 @@
 require 'haml'
 require 'bundler/setup'
-require 'sass'
 require 'ostruct'
 require 'yaml'
 require 'active_record'
 require 'logger'
 require 'sinatra'
 require 'sinatra/content_for'
-require 'sanitize'
 require 'rest_client'
 
 #set environment

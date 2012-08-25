@@ -39,8 +39,6 @@ GEM
       debugger-ruby_core_source (>= 1.1.1)
     debugger-ruby_core_source (1.1.3)
     diff-lcs (1.1.3)
-    domain_name (0.5.3)
-      unf (~> 0.0.3)
     eventmachine (0.12.10)
     ffi (1.1.5)
     haml (3.1.7)
@@ -48,21 +46,10 @@ GEM
     json (1.7.5)
     libwebsocket (0.1.5)
       addressable
-    mechanize (2.5.1)
-      domain_name (~> 0.5, >= 0.5.1)
-      mime-types (~> 1.17, >= 1.17.2)
-      net-http-digest_auth (~> 1.1, >= 1.1.1)
-      net-http-persistent (~> 2.5, >= 2.5.2)
-      nokogiri (~> 1.4)
-      ntlm-http (~> 0.1, >= 0.1.1)
-      webrobots (~> 0.0, >= 0.0.9)
     mime-types (1.19)
     multi_json (1.3.6)
     mysql2 (0.3.11)
-    net-http-digest_auth (1.2.1)
-    net-http-persistent (2.7)
     nokogiri (1.5.5)
-    ntlm-http (0.1.1)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -81,9 +68,6 @@ GEM
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.2)
     rubyzip (0.9.9)
-    sanitize (2.0.3)
-      nokogiri (>= 1.4.4, < 1.6)
-    sass (3.2.1)
     selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -114,10 +98,6 @@ GEM
       rack (>= 1.0.0)
     tilt (1.3.3)
     tzinfo (0.3.33)
-    unf (0.0.5)
-      unf_ext
-    unf_ext (0.0.5)
-    webrobots (0.0.13)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -126,13 +106,11 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
-  builder
   capybara
   capybara-webkit
   database_cleaner
   debugger
   haml
-  mechanize
   mysql2
   rack
   rack-test
@@ -140,8 +118,6 @@ DEPENDENCIES
   rake
   rest-client
   rspec
-  sanitize
-  sass
   sinatra
   sinatra-content-for
   sinatra-flash

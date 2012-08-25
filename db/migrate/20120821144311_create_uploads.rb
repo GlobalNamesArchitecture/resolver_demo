@@ -6,6 +6,7 @@ class CreateUploads < ActiveRecord::Migration
       t.string  :gnrd_url
       t.text    :verbatim_names
       t.text    :resolved_names
+      t.integer :status, :default => 0
       t.timestamps
     end
     add_index :uploads, :token, :unique => true

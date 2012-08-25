@@ -32,6 +32,7 @@
       #namesView.hidden
         .looking Finding names...
         %div{:class => 'noResults'} No Names Found
+        %div{:class => 'noResults failed'} Names Look-up Failed
       #searchView.hidden
         #searchToolbar
           %input{:id => 'searchTermsInput', :class => 'toolbarField', :onkeydown => 'if (event.keyCode == 13) { PDFView.search(); }'}
@@ -59,6 +60,7 @@
           #toolbarViewerRight
             %input{:id => 'fileInput', :class => 'fileInput', :type => 'file', :oncontextmenu => 'return false;', :style => 'visibility: hidden; position: fixed; right: 0; top: 0'}
             %span{:id => 'nameLoader', :class => 'toolbarLabel'} Finding names...
+            %span{:id => 'nameLoaderFailed', :class => 'toolbarLabel'} Names look-up failed
             %button{:id => 'fullscreen', :class => 'toolbarButton fullscreen', :title => 'Fullscreen', :tabindex => '12', :onclick => 'PDFView.fullscreen();'}
               %span Fullscreen
             %button{:id => 'print', :class => 'toolbarButton print', :title => 'Print', :tabindex => '13', :onclick => 'window.print();'}

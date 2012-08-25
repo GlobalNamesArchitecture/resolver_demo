@@ -6,22 +6,16 @@ gem 'sinatra-flash'
 gem 'sinatra-redirect-with-flash'
 gem 'sinatra-reloader'
 gem 'haml'
-gem 'sass'
-gem 'mechanize'
-gem 'rspec'
 gem 'rack'
 gem 'rack-timeout'
-gem 'rack-test'
-gem 'builder'
 gem 'rest-client'
 gem 'mysql2'
-gem "activerecord"
-gem 'sanitize'
+gem 'activerecord'
 gem 'rest-client'
+gem 'rake'
 
 group :development, :test do
   gem 'debugger'
-  gem 'rake'
 end
 
 group :production do
@@ -29,6 +23,8 @@ group :production do
 end
 
 group :test do
+  gem 'rack-test'
+  gem 'rspec'
   gem 'database_cleaner'
   gem 'capybara'
   gem 'capybara-webkit'

@@ -1,3 +1,4 @@
+/*********** GLOBALS *************/
 h1 {
   color:#F3F3F3;
   margin:20px 0 20px 100px;
@@ -6,14 +7,19 @@ h1 {
   vertical-align:middle;
 }
 
-#nameLoader{
-  margin-right:20px;
-  padding-left:20px;
-  background-image:url(../images/throbber.gif);
-  background-position:0 50%;
-  background-repeat:no-repeat no-repeat;
+#flash_error {
+  color:yellow;
+  font-weight:bold;
+  font-size:20px;
 }
 
+.notFound {
+  font-size:16px;
+  margin-left:100px;
+  color:#F3F3F3;
+}
+
+/*********** HOME *************/
 #uploadForm {
   color:#F3F3F3;
   width:500px;
@@ -58,10 +64,20 @@ h1 {
   -webkit-box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
 }
 
-#flash_error {
-  color:yellow;
-  font-weight:bold;
-  font-size:20px;
+/*********** VIEWER *************/
+#nameLoader {
+  margin-right:20px;
+  padding-left:20px;
+  background-image:url(../images/throbber.gif);
+  background-position:0 50%;
+  background-repeat:no-repeat no-repeat;
+}
+
+#nameLoaderFailed {
+  margin-right:20px;
+  padding-left:20px;
+  color:#ff0000;
+  display:none;
 }
 
 #namesView {
@@ -82,6 +98,10 @@ h1 {
 
 #namesView .noResults {
   display:none;
+}
+
+#namesView .failed {
+  color:#ff0000;
 }
 
 #namesView > a, #namesView > div {

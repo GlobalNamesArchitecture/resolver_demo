@@ -4,8 +4,6 @@ require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
-require 'builder'
-require 'uri'
 require 'json'
 
 class ReconciliationDemo < Sinatra::Base
@@ -44,7 +42,7 @@ class ReconciliationDemo < Sinatra::Base
       @upload = Upload.find_by_token(params[:token])
       return page_not_found(params[:format]) if @upload.nil?
       content_type :json
-      @upload.get_names
+      JSON.dump(@upload.get_names)
     else
       page_not_found(params[:format])
     end

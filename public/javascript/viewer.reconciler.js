@@ -6,6 +6,13 @@ $(function() {
 
   "use strict";
 
+  Reconciler.status = {
+    "init"      : 0,
+    "sent"      : 1,
+    "completed" : 2,
+    "failed"    : 3
+  };
+
   Reconciler.vars = {
     names_found : false,
     verbatim    : []
@@ -37,16 +44,28 @@ $(function() {
       dataType : 'json',
       timeout  : 10000,
       success  : function(response) {
-        self.buildNames(response);
-        self.renderNames();
+        if(response.status === self.status.completed) {
+          self.buildNames(response);
+          self.renderNames();
+        } else {
+          self.failed();
+        }
       },
       error : function(xhr, ajaxOptions, thrownError) {
         if(ajaxOptions === 'timeout' && counter < 10) {
           counter++;
           self.getNames(counter);
+        } else {
+          self.failed();
         }
       }
     });
+  };
+
+  Reconciler.failed = function() {
+    this.hideLoaders();
+    $('#nameLoaderFailed').show();
+    $('#namesView').find(".failed").show();
   };
 
   Reconciler.buildNames = function(response) {
@@ -65,6 +84,11 @@ $(function() {
     return 0;
   };
 
+  Reconciler.hideLoaders = function() {
+    $('#nameLoader').hide();
+    $('#namesView').find(".looking").hide();
+  };
+
   Reconciler.renderNames = function() {
     var self = this,
         namesButton = $('#viewNames'),
@@ -74,8 +98,7 @@ $(function() {
         searchButton = $('#searchButton'),
         item = '';
 
-    $('#nameLoader').fadeOut();
-    namesView.find(".looking").fadeOut();
+    self.hideLoaders();
 
     if(self.vars.verbatim.length === 0) {
       namesView.find(".noResults").show();
