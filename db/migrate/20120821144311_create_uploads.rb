@@ -4,13 +4,13 @@ class CreateUploads < ActiveRecord::Migration
       t.string  :token
       t.string  :file_path
       t.string  :gnrd_url
-      t.text    :verbatim_names
+      t.text    :found_names
       t.text    :resolved_names
       t.integer :status, :default => 0
       t.timestamps
     end
     add_index :uploads, :token, :unique => true
-    execute "alter table uploads modify column verbatim_names mediumtext"
+    execute "alter table uploads modify column found_names mediumtext"
     execute "alter table uploads modify column resolved_names mediumtext"
   end
 end

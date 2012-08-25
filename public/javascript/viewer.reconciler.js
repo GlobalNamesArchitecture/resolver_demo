@@ -9,12 +9,14 @@ $(function() {
   Reconciler.status = {
     "init"      : 0,
     "sent"      : 1,
-    "found"     : 2,
-    "resolved"  : 3,
-    "failed"    : 4
+    "busy"      : 2,
+    "found"     : 3,
+    "resolved"  : 4,
+    "failed"    : 5
   };
 
   Reconciler.vars = {
+    timeout     : 5000,
     names_found : false,
     verbatim    : []
   };
@@ -47,13 +49,16 @@ $(function() {
       async    : true,
       url      : '/get_names?token=' + self.settings.token,
       dataType : 'json',
-      timeout  : 5000,
+      timeout  : self.vars.timeout,
       success  : function(response) {
-        if(response.status === self.status.resolved) {
+        self.updateStatus(response.status);
+        if(response.status === self.status.busy) {
+          setTimeout(function() { self.getNames(0); }, self.vars.timeout);
+        } else if (response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
         } else {
-          self.failed();
+          self.updateStatus(Reconciler.status.failed);
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -61,16 +66,34 @@ $(function() {
           counter++;
           self.getNames(counter);
         } else {
-          self.failed();
+          self.updateStatus(Reconciler.status.failed);
         }
       }
     });
   };
 
-  Reconciler.failed = function() {
-    this.hideLoaders();
-    $('#nameLoaderFailed').show();
-    $('#namesView').find(".failed").show();
+  Reconciler.updateStatus = function(status) {
+    switch(status) {
+      case Reconciler.status.sent:
+        break;
+      case Reconciler.status.found:
+        $('#nameLoader').text("Resolving names...");
+        $('#namesView').text("Resolving names...");
+        break;
+      case Reconciler.status.resolved:
+        this.hideLoaders();
+        break;
+      case Reconciler.status.failed:
+        this.hideLoaders();
+        $('#nameLoaderFailed').show();
+        $('#namesView').find(".failed").show();
+        break;
+    }
+  };
+
+  Reconciler.hideLoaders = function() {
+    $('#nameLoader').hide();
+    $('#namesView').find(".looking").hide();
   };
 
   Reconciler.buildNames = function(response) {
@@ -89,11 +112,6 @@ $(function() {
     return 0;
   };
 
-  Reconciler.hideLoaders = function() {
-    $('#nameLoader').hide();
-    $('#namesView').find(".looking").hide();
-  };
-
   Reconciler.renderNames = function() {
     var self = this,
         namesButton = $('#viewNames'),
@@ -102,8 +120,6 @@ $(function() {
         searchInput = $('#searchTermsInput'),
         searchButton = $('#searchButton'),
         item = '';
-
-    self.hideLoaders();
 
     if(self.vars.verbatim.length === 0) {
       namesView.find(".noResults").show();
