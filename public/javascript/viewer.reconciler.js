@@ -16,7 +16,6 @@ $(function() {
     this.getNames(0);
   };
 
-//TODO: text indexing not working
   Reconciler.activateNamesButton = function() {
     $.each($('#toolbarSidebar').children(), function(i) {
       $(this).click(function(e) {
@@ -66,7 +65,6 @@ $(function() {
     return 0;
   };
 
-  //TODO: why is this a timeout?
   Reconciler.renderNames = function() {
     var self = this,
         namesButton = $('#viewNames'),
