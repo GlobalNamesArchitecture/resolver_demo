@@ -23,18 +23,22 @@ describe Upload do
     file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_with_names.pdf')
     attach_file "file", file_path
     click_button "Resolve Names"
+    names_loader = "#nameLoader"
+    names_viewer = "#namesView"
+    find(names_loader).should have_content("Finding names...")
+    find(names_viewer).should have_content("Finding names...")
     page.execute_script(<<-JAVASCRIPT)
       $('#sidebarToggle').trigger('click');
       $('#viewNames').trigger('click');
 JAVASCRIPT
-    names_viewer = "#namesView"
-    find(names_viewer).should have_content("Looking for names...")
     name = false
     until name
+      sleep(1)
       html = Capybara::Node::Simple.new(body)
       name = html.find(names_viewer).text.include? "Bulimulus"
     end
     find(names_viewer).text.should include("Bulimulus")
+    find(names_loader).visible?.should be_false
   end
   
 end

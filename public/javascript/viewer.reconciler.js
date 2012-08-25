@@ -7,17 +7,25 @@ $(function() {
   "use strict";
 
   Reconciler.vars = {
-    viewer          : {},
-    pageText        : "",
-    foundNames      : false,
-    identifiedNames : []
+    names_found : false,
+    verbatim    : []
   };
 
-  Reconciler.initialize = function(obj) {
-    this.vars.viewer = obj;
-    this.getPageText();
+  Reconciler.initialize = function() {
+    this.activateNamesButton();
     this.getNames(0);
   };
+
+  Reconciler.activateNamesButton = function() {
+    $('#viewNames').click(function(e) {
+      e.preventDefault();
+      PDFView.extractText();
+      $('#toolbarSidebar').children().removeClass('toggled');
+      $('#sidebarContent').children().addClass('hidden');
+      $(this).addClass('toggled');
+      $('#namesView').removeClass('hidden');
+    });
+  }
 
   Reconciler.getNames = function(counter) {
     var self = this;
@@ -27,10 +35,10 @@ $(function() {
       async    : true,
       url      : '/get_names?token=' + self.settings.token,
       dataType : 'json',
-      timeout  : 8000,
+      timeout  : 10000,
       success  : function(response) {
         self.buildNames(response);
-        self.vars.foundNames = true;
+        self.renderNames();
         $('#nameLoader').fadeOut();
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -42,30 +50,14 @@ $(function() {
     });
   };
 
-  Reconciler.getPageText = function() {
-    var self = this;
-
-    self.vars.viewer.extractText();
-    setTimeout(function checkforText() {
-      if(self.vars.viewer.pageText[self.vars.viewer.pages.length-1]) {
-        self.setPageText(self.vars.viewer.pageText.join());
-      } else {
-        setTimeout(checkforText, 10);
-      }
-    }, 10);
-  };
-
-  Reconciler.setPageText = function(value) {
-    this.vars.pageText = value;
-  };
-
   Reconciler.buildNames = function(response) {
     var self = this;
 
-    $.each(response.names, function() {
-      if($.inArray(this.identifiedName, self.vars.identifiedNames) === -1) { self.vars.identifiedNames.push(this.identifiedName); }
+    $.each(response.verbatim_names, function() {
+      if($.inArray(this, self.vars.verbatim) === -1) { self.vars.verbatim.push(this); }
     });
-    this.vars.identifiedNames.sort(this.compareStringLengths);
+    this.vars.verbatim.sort(this.compareStringLengths);
+    this.vars.names_found = true;
   };
 
   Reconciler.compareStringLengths = function(a, b) {
@@ -74,47 +66,44 @@ $(function() {
     return 0;
   };
 
-  //TODO
-  Reconciler.highlight = function(obj) {
-  var self = this,
-      children = $('#' + obj.el.id).find(".textLayer").children().size();
-  };
-
   Reconciler.renderNames = function() {
     var self = this,
-        nameResults = $('#namesView').removeAttr('hidden'),
+        namesButton = $('#viewNames'),
+        namesView   = $('#namesView'),
         searchPanel = $('#viewSearch'),
         searchInput = $('#searchTermsInput'),
         searchButton = $('#searchButton'),
         item = '';
 
-    if(nameResults.attr("data-status") === "complete") { return; }
-
-    nameResults.append('<div class="looking">Looking for names...</div>');
+    if(namesView.attr("data-status") === "complete") { return; }
 
     setTimeout(function appendNames() {
-      if(self.vars.foundNames) {
-        nameResults.find(".looking").remove();
-        if(self.vars.identifiedNames.length > 0) {
-          $.each(self.vars.identifiedNames.sort(), function() {
+      if(self.vars.names_found) {
+        namesView.find(".looking").fadeOut();
+        if(self.vars.verbatim.length > 0) {
+          $.each(self.vars.verbatim.sort(), function() {
             item = $('<a href="#">' + this + '</a>');
-            nameResults.append(item);
+            namesView.append(item);
             $(item).click(function(e) {
               e.preventDefault();
+              namesView.addClass('hidden');
+              namesButton.removeClass('toggled');
               searchPanel.trigger('click');
               searchInput.val($(this).text());
               searchButton.trigger('click');
             });
           });
         } else {
-          nameResults.append('<div class="nothing">No names found</div>');
+          namesView.find(".nothing").show();
         }
-        nameResults.attr("data-status", "complete");
+        namesView.attr("data-status", "complete");
       } else {
         setTimeout(appendNames, 10);
       }
     }, 10)
 
   };
+
+  Reconciler.initialize();
 
 });

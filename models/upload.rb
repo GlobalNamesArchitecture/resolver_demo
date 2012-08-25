@@ -7,14 +7,14 @@ class Upload < ActiveRecord::Base
   end
 
   def get_names
-    return output if !output.nil?
+    return verbatim_names if !verbatim_names.nil?
     response = nil
     until response
       sleep(2)
       response = JSON.parse(RestClient.get(gnrd_url), :symbolize_names => true)[:names]
     end
-    save_output(response)
-    output
+    save_verbatim_names(response)
+    verbatim_names
   end
 
   private
@@ -31,7 +31,7 @@ class Upload < ActiveRecord::Base
       if [302, 303].include? response.code
         save_location(response.headers[:location])
       else
-        #TODO
+        #TODO Deal with GNRD failing to produce a location
       end
     end
   end
@@ -42,8 +42,9 @@ class Upload < ActiveRecord::Base
     reload
   end
   
-  def save_output(response)
-    self.output = {:names => response }.to_json
+  def save_verbatim_names(response)
+    names = response.map { |i| i[:identifiedName] }.uniq! || []
+    self.verbatim_names = { :verbatim_names => names }.to_json
     self.save!
     reload
   end
