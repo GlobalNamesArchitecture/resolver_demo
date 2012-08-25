@@ -25,10 +25,11 @@ configure do
                  :host => conf.delete('host') || '0.0.0.0',
                  :root_path => root_path,
                  :upload_path => File.join(root_path, "public", "uploads"),
-                 :salt => conf.delete('salt'),
+                 :salt => conf.delete('salt') || '',
+                 :cleaner_period => conf.delete('cleaner_period') || 7,
                  :gnrd_url => conf.delete('gnrd_url') || "http://gnrd.globalnames.org/name_finder.json",
                  :resolver_url => conf.delete('resolver_url') || "http://resolver.globalnames.org/name_resolvers.json",
-                 :cleaner_period => 7,
+                 :union_id => conf.delete('union_id') || 7
                )
 
   # to see sql during tests uncomment next line

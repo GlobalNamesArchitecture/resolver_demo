@@ -9,8 +9,9 @@ $(function() {
   Reconciler.status = {
     "init"      : 0,
     "sent"      : 1,
-    "completed" : 2,
-    "failed"    : 3
+    "found"     : 2,
+    "resolved"  : 3,
+    "failed"    : 4
   };
 
   Reconciler.vars = {
@@ -19,6 +20,10 @@ $(function() {
   };
 
   Reconciler.initialize = function() {
+    if(!PDFView.pages) {
+      this.hideLoaders();
+      return;
+    }
     this.activateNamesButton();
     this.getNames(0);
   };
@@ -42,9 +47,9 @@ $(function() {
       async    : true,
       url      : '/get_names?token=' + self.settings.token,
       dataType : 'json',
-      timeout  : 10000,
+      timeout  : 5000,
       success  : function(response) {
-        if(response.status === self.status.completed) {
+        if(response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
         } else {
@@ -71,8 +76,8 @@ $(function() {
   Reconciler.buildNames = function(response) {
     var self = this;
 
-    $.each(response.verbatim_names, function() {
-      if($.inArray(this, self.vars.verbatim) === -1) { self.vars.verbatim.push(this); }
+    $.each(response.data, function() {
+      if($.inArray(this.supplied_name_string, self.vars.verbatim) === -1) { self.vars.verbatim.push(this.supplied_name_string); }
     });
     this.vars.verbatim.sort(this.compareStringLengths);
     this.vars.names_found = true;
