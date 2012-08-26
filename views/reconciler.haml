@@ -9,7 +9,7 @@
   %script{ :src => "javascript/viewer.reconciler.js", :type => "text/javascript" }
   :javascript
     kDefaultURL = "#{@upload[:file_path]}"
-    PDFJS.workerSrc = 'javascript/build/pdf.js'
+    PDFJS.workerSrc = 'javascript/build/pdf.min.js'
     $.extend(Reconciler.settings, { "token" : "#{@upload[:token]}" });
 
 #outerContainer

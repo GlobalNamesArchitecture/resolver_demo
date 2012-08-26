@@ -53,19 +53,20 @@ class Upload < ActiveRecord::Base
     response = nil
     counter = 0
     while counter <= 15
-      sleep(3)
+      sleep(5)
       response = JSON.parse(RestClient.get(gnrd_url), :symbolize_names => true)[:names] rescue set_status(Upload::STATUS[:failed])
+      break if response
       counter += 1
     end
-    response.nil? ? set_status(Upload::STATUS[:failed]) : save_names(response)
+    response.nil? ? set_status(Upload::STATUS[:failed]) : save_found_names(response)
   end
   
-  def save_names(response)
+  def save_found_names(response)
     names = response.map { |i| i[:identifiedName] }.uniq || []
     self.found_names = { :found_names => names }
     if names.empty?
       self.resolved_names = { :data => [] }
-      self.status = Upload::STATUS[:resolved]
+      self.status = Upload::STATUS[:resolved] #premature setting of status, but hey, why resolve no names?
     else
       self.status = Upload::STATUS[:found]
     end
@@ -76,7 +77,20 @@ class Upload < ActiveRecord::Base
     set_status(Upload::STATUS[:resolve_sent])
     names = found_names[:found_names].join("\n")
     params = { :data => names, :data_source_ids => SiteConfig::union_id, :with_context => true }
-    response = JSON.parse(RestClient.post(SiteConfig::resolver_url, params), :symbolize_names => true) rescue update_status(Upload::STATUS[:failed])
+    response = JSON.parse(RestClient.post(SiteConfig::resolver_url, params), :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
+    clean_resolved_names(response) if response
+  end
+  
+  def clean_resolved_names(response)
+    data = []
+    response[:data].each do |name|
+      data << name if name.has_key?(:results)
+    end
+    response[:data] = data
+    save_resolved_names(response)
+  end
+  
+  def save_resolved_names(response)
     self.status = Upload::STATUS[:resolved]
     self.resolved_names = response
     self.save!

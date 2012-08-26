@@ -1,4 +1,4 @@
-/*global $, jQuery, window, document, self, XMLHttpRequest, alert, encodeURIComponent, _gaq */
+/*global $, jQuery, window, document, self, setTimeout, PDFView, mozL10n, XMLHttpRequest, alert, encodeURIComponent, _gaq */
 
 var Reconciler = Reconciler || { 'settings': {} };
 
@@ -40,7 +40,7 @@ $(function() {
         $('#sidebarContent').children().eq(i).show().siblings().hide();
       });
     });
-  }
+  };
 
   Reconciler.getNames = function(counter) {
     var self = this;
@@ -59,8 +59,9 @@ $(function() {
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
-        if(ajaxOptions === 'timeout' && counter < 10) {
-          counter++;
+        xhr = thrownError = null;
+        if(ajaxOptions === 'timeout' && counter < 15) {
+          counter += 1;
           self.getNames(counter);
         } else {
           self.updateStatus(Reconciler.status.failed);
@@ -70,8 +71,8 @@ $(function() {
   };
 
   Reconciler.updateStatus = function(status) {
-    var self = this,
-        text = "",
+    var self   = this,
+        text   = "",
         loader = $('#nameLoader'),
         viewer = $('#namesView').find(".looking");
 
@@ -84,13 +85,13 @@ $(function() {
         text = mozL10n.get('found_names', null, 'Found names...');
         loader.text(text);
         viewer.text(text);
-        setTimeout(function () { self.getNames(0); }, self.vars.timeout);
+        setTimeout(function() { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.resolve_sent:
         text = mozL10n.get('resolving_names', null, 'Resolving names...');
         loader.text(text);
         viewer.text(text);
-        setTimeout(function () { self.getNames(0); }, self.vars.timeout);
+        setTimeout(function() { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.resolved:
         loader.hide();
