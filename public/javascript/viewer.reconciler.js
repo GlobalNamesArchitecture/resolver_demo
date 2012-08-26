@@ -23,10 +23,24 @@ $(function() {
   };
 
   Reconciler.initialize = function() {
+    var self = this;
+
     if(!PDFView.pages) {
       this.hideLoaders();
       return;
     }
+    setTimeout(function checkViewer() {
+      //TODO: still too late in process because highlight elements later interfere with proper rendering
+      if(PDFView.pages[0] === undefined) {
+        setTimeout(checkViewer, 50);
+      } else {
+        self.activate();
+      }
+    }, 50);
+  };
+
+  Reconciler.activate = function() {
+    // Possible solution to detect scroll: PDFView.watchScroll($('#viewerContainer')[0], {}, callback);
     this.activateNamesButton();
     this.getNames(0);
   };
@@ -56,6 +70,7 @@ $(function() {
         if(response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
+          self.highlightNames();
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -148,6 +163,12 @@ $(function() {
       });
     });
 
+  };
+
+  Reconciler.highlightNames = function() {
+/* Commented out until can do it properly
+    $('#viewer').highlight(this.vars.verbatim, { element: 'div', className : 'highlight', wordsOnly : true });
+*/
   };
 
   Reconciler.initialize();

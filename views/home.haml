@@ -27,12 +27,12 @@
               %input{:class => 'submit-button green-submit', :type => :submit, :value => "Resolve Names"}
 
           #description
-            When a file is uploaded, behind the scenes it is sent to the
-            = succeed " service." do
+            Uploaded PDFs are sent to the
+            = succeed " web service." do
               %a{:href => 'http://gnrd.globalnames.org'} Global Names Recognition and Discovery 
-            Found scientific names are then sent to the
-            = succeed "," do
+            Scientific names found within the document are then reconciled against the comprehensive Union classification using the
+            = succeed " web service." do
               %a{:href => 'http://resolver.globalnames.org'} Global Names Resolver
-            to be reconciled against the comprehensive Union classification. If the PDF is text-based, names within the document are marked-up to illustrate current taxonomic usage.
+            If the PDF is text-based, names within the document are marked-up to illustrate current taxonomic usage.
 
-          %div WARNING: This application requires a modern browser because it uses HTML5 technologies.
+          %div WARNING: This application requires a modern browser.
