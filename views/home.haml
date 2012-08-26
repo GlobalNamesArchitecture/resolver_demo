@@ -25,3 +25,12 @@
               %input{:type => :file, :name => "file", :id => :file, :size => 30}
             %div
               %input{:class => 'submit-button green-submit', :type => :submit, :value => "Resolve Names"}
+
+          #description
+            When a file is uploaded, behind the scenes it is sent to the
+            = succeed " service." do
+              %a{:href => 'http://gnrd.globalnames.org'} Global Names Recognition and Discovery 
+            Found names are then sent to the
+            = succeed "," do
+              %a{:href => 'http://resolver.globalnames.org'} Global Names Resolver
+            to be reconciled against the comprehensive Union classification and names within the document are encoded to illustrate current usage.

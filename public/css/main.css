@@ -22,13 +22,13 @@ h1 {
 /*********** HOME *************/
 #uploadForm {
   color:#F3F3F3;
-  width:500px;
+  width:700px;
   margin-left:125px;
 }
 
 #uploadForm form > div {
   line-height:40px;
-  height:40px;
+  height:50px;
   font-size:24px;
 }
 
@@ -52,7 +52,7 @@ h1 {
   float: left;
   font-weight: bold;
   font-size: 16px;
-  margin: 15px 5px;
+  margin: 5px;
   background: #5aa52b;
   background: -moz-linear-gradient(center bottom, rgb(27,112,4) 4%, rgb(90,165,43) 58%, rgb(144,207,76) 98%) !important;
   background: -webkit-gradient(linear,left bottom,left top, color-stop(0.04, rgb(27,112,4)), color-stop(0.58, rgb(90,165,43)), color-stop(0.98, rgb(144,207,76))) !important;
@@ -62,6 +62,20 @@ h1 {
   box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
   -moz-box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
   -webkit-box-shadow: inset 1px 1px 5px 1px rgb(126, 229, 44), 0 1px 2px rgba(0,0,0, 1);
+}
+
+#description {
+  display:block;
+  margin-top:20px;
+}
+
+#description a {
+  text-decoration: none;
+  color: #90CF4C;
+}
+
+#description a:hover {
+  color: rgb(126, 229, 44);
 }
 
 /*********** VIEWER *************/

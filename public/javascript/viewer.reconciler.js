@@ -73,7 +73,7 @@ $(function() {
     var self = this,
         text = "",
         loader = $('#nameLoader'),
-        viewer = $('#namesView');
+        viewer = $('#namesView').find(".looking");
 
     switch(status) {
       case this.status.find_sent:
@@ -94,12 +94,12 @@ $(function() {
         break;
       case this.status.resolved:
         loader.hide();
-        viewer.find(".looking").hide();
+        viewer.hide();
         break;
       case this.status.failed:
         loader.hide();
         $('#nameLoaderFailed').show();
-        viewer.find(".looking").hide().end().find(".failed").show();
+        viewer.hide().end().find(".failed").show();
         break;
     }
   };
@@ -122,15 +122,15 @@ $(function() {
 
   Reconciler.renderNames = function() {
     var self = this,
-        namesButton = $('#viewNames'),
-        namesView   = $('#namesView'),
-        searchPanel = $('#viewSearch'),
-        searchInput = $('#searchTermsInput'),
+        namesButton  = $('#viewNames'),
+        namesView    = $('#namesView'),
+        searchPanel  = $('#viewSearch'),
+        searchInput  = $('#searchTermsInput'),
         searchButton = $('#searchButton'),
         item = '';
 
     if(self.vars.verbatim.length === 0) {
-      namesView.find(".noResults").show();
+      namesView.find(".noResults").eq(0).show();
       return;
     }
 

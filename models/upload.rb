@@ -32,14 +32,9 @@ class Upload < ActiveRecord::Base
       if [302, 303].include? response.code
         save_location(response.headers[:location])
       else
-        failed
+        set_status(Upload::STATUS[:failed])
       end
     end
-  end
-  
-  def set_status(new_status)
-    self.status = new_status
-    self.save!
   end
 
   def save_location(location)
@@ -47,21 +42,33 @@ class Upload < ActiveRecord::Base
     self.status = Upload::STATUS[:find_sent]
     self.save!
   end
-  
+
+  def set_status(new_status)
+    self.status = new_status
+    self.save!
+  end
+
   def find_names
     set_status(Upload::STATUS[:find_busy])
     response = nil
-    until response
-      sleep(2)
+    counter = 0
+    while counter <= 15
+      sleep(3)
       response = JSON.parse(RestClient.get(gnrd_url), :symbolize_names => true)[:names] rescue set_status(Upload::STATUS[:failed])
+      counter += 1
     end
-    save_names(response)
+    response.nil? ? set_status(Upload::STATUS[:failed]) : save_names(response)
   end
   
   def save_names(response)
-    names = response.map { |i| i[:identifiedName] }.uniq! || []
+    names = response.map { |i| i[:identifiedName] }.uniq || []
     self.found_names = { :found_names => names }
-    self.status = Upload::STATUS[:found]
+    if names.empty?
+      self.resolved_names = { :data => [] }
+      self.status = Upload::STATUS[:resolved]
+    else
+      self.status = Upload::STATUS[:found]
+    end
     self.save!
   end
   
