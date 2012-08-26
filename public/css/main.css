@@ -94,6 +94,11 @@ h1 {
   display:none;
 }
 
+#viewNames.toolbarButton::before {
+  display: inline-block;
+  content: url(../images/toolbarButton-names.png);
+}
+
 #namesView {
   overflow: auto;
   position: absolute;

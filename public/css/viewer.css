@@ -10,7 +10,7 @@ html {
 body {
   height: 100%;
   background-color: #404040;
-  background-image: url(../images/texture.png);
+  background-image: url(images/texture.png);
 }
 
 body,
@@ -32,7 +32,7 @@ select {
   padding-top: 6px;
   padding-bottom: 24px;
   background-color: #404040;
-  background-image: url(../images/texture.png);
+  background-image: url(images/texture.png);
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -53,7 +53,7 @@ select {
 
 #viewerContainer:-moz-full-screen {
   background-color: #404040;
-  background-image: url(../images/texture.png);
+  background-image: url(images/texture.png);
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -66,7 +66,7 @@ select {
 #viewerContainer:full-screen {
   top: 0px;
   background-color: #404040;
-  background-image: url(../images/texture.png);
+  background-image: url(images/texture.png);
   width: 100%;
   height: 100%;
 }
@@ -221,15 +221,15 @@ html[dir='rtl'] #sidebarContent {
 #toolbarSidebar {
   width: 200px;
   height: 29px;
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -webkit-linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -moz-linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -ms-linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -o-linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     linear-gradient(hsla(0,0%,30%,.99), hsla(0,0%,25%,.95));
   box-shadow: inset -2px 0 0 hsla(0,0%,100%,.08),
               inset 0 1px 1px hsla(0,0%,0%,.15),
@@ -241,15 +241,15 @@ html[dir='rtl'] #sidebarContent {
 #toolbarViewer {
   position: relative;
   height: 32px;
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -webkit-linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -moz-linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -ms-linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     -o-linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
-  background-image: url(../images/texture.png),
+  background-image: url(images/texture.png),
                     linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
   border-left: 1px solid hsla(0,0%,0%,.5);
   box-shadow: inset 1px 0 0 hsla(0,0%,100%,.08),
@@ -560,7 +560,7 @@ html[dir='rtl'] .dropdownToolbarButton {
   max-width: 120px;
   padding: 3px 2px 2px;
   overflow: hidden;
-  background: url(../images/toolbarButton-menuArrows.png) no-repeat;
+  background: url(images/toolbarButton-menuArrows.png) no-repeat;
 }
 html[dir='ltr'] .dropdownToolbarButton {
   background-position: 95%;
@@ -620,57 +620,57 @@ html[dir='rtl'] .toolbarButton:first-child {
 
 .toolbarButton#sidebarToggle::before {
   display: inline-block;
-  content: url(../images/toolbarButton-sidebarToggle.png);
+  content: url(images/toolbarButton-sidebarToggle.png);
 }
     
 html[dir='ltr'] .toolbarButton.pageUp::before {
   display: inline-block;
-  content: url(../images/toolbarButton-pageUp.png);
+  content: url(images/toolbarButton-pageUp.png);
 }
 
 html[dir='rtl'] .toolbarButton.pageUp::before {
   display: inline-block;
-  content: url(../images/toolbarButton-pageUp-rtl.png);
+  content: url(images/toolbarButton-pageUp-rtl.png);
 }
     
 html[dir='ltr'] .toolbarButton.pageDown::before {
   display: inline-block;
-  content: url(../images/toolbarButton-pageDown.png);
+  content: url(images/toolbarButton-pageDown.png);
 }
 
 html[dir='rtl'] .toolbarButton.pageDown::before {
   display: inline-block;
-  content: url(../images/toolbarButton-pageDown-rtl.png);
+  content: url(images/toolbarButton-pageDown-rtl.png);
 }
 
 .toolbarButton.zoomOut::before {
   display: inline-block;
-  content: url(../images/toolbarButton-zoomOut.png);
+  content: url(images/toolbarButton-zoomOut.png);
 }
     
 .toolbarButton.zoomIn::before {
   display: inline-block;
-  content: url(../images/toolbarButton-zoomIn.png);
+  content: url(images/toolbarButton-zoomIn.png);
 }
 
 .toolbarButton.fullscreen::before {
   display: inline-block;
-  content: url(../images/toolbarButton-fullscreen.png);
+  content: url(images/toolbarButton-fullscreen.png);
 }
 
 .toolbarButton.print::before {
   display: inline-block;
-  content: url(../images/toolbarButton-print.png);
+  content: url(images/toolbarButton-print.png);
 }
 
 .toolbarButton.openFile::before {
   display: inline-block;
-  content: url(../images/toolbarButton-openFile.png);
+  content: url(images/toolbarButton-openFile.png);
 }
 
 .toolbarButton.download::before {
   display: inline-block;
-  content: url(../images/toolbarButton-download.png);
+  content: url(images/toolbarButton-download.png);
 }
 
 .toolbarButton.bookmark {
@@ -682,27 +682,22 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 }
 
 .toolbarButton.bookmark::before {
-  content: url(../images/toolbarButton-bookmark.png);
+  content: url(images/toolbarButton-bookmark.png);
 }
     
 #viewThumbnail.toolbarButton::before {
   display: inline-block;
-  content: url(../images/toolbarButton-viewThumbnail.png);
+  content: url(images/toolbarButton-viewThumbnail.png);
 }
     
 #viewOutline.toolbarButton::before {
   display: inline-block;
-  content: url(../images/toolbarButton-viewOutline.png);
+  content: url(images/toolbarButton-viewOutline.png);
 }
 
 #viewSearch.toolbarButton::before {
   display: inline-block;
-  content: url(../images/toolbarButton-search.png);
-}
-
-#viewNames.toolbarButton::before {
-  display: inline-block;
-  content: url(../images/toolbarButton-names.png);
+  content: url(images/toolbarButton-search.png);
 }
 
 
@@ -973,7 +968,7 @@ canvas {
   top: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/loading-icon.gif') center no-repeat;
+  background: url('images/loading-icon.gif') center no-repeat;
 }
 
 #loadingBox {
@@ -1028,6 +1023,28 @@ canvas {
 #loadingBar .progress.full {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
+}
+
+#loadingBar .progress.indeterminate {
+  width: 100%;
+  height: 25px;
+  background-image: -moz-linear-gradient( 30deg, #404040, #404040 15%, #898989, #404040 85%, #404040);
+  background-image: -webkit-linear-gradient( 30deg, #404040, #404040 15%, #898989, #404040 85%, #404040);
+  background-image: -ms-linear-gradient( 30deg, #404040, #404040 15%, #898989, #404040 85%, #404040);
+  background-image: -o-linear-gradient( 30deg, #404040, #404040 15%, #898989, #404040 85%, #404040);
+  background-size: 75px 25px;
+  -moz-animation: progressIndeterminate 1s linear infinite;
+  -webkit-animation: progressIndeterminate 1s linear infinite;
+}
+
+@-moz-keyframes progressIndeterminate {
+  from { background-position: 0px 0px; }
+  to { background-position: 75px 0px; }
+}
+
+@-webkit-keyframes progressIndeterminate {
+  from { background-position: 0px 0px; }
+  to { background-position: 75px 0px; }
 }
 
 .textLayer {
@@ -1165,6 +1182,17 @@ canvas {
 }
 #PDFBug table {
   font-size: 10px;
+}
+
+#viewer.textLayer-visible .textLayer > div,
+#viewer.textLayer-hover .textLayer > div:hover {
+  background-color: white;
+  color: black;
+}
+
+#viewer.textLayer-shadow .textLayer > div {
+  background-color: rgba(255,255,255, .6);
+  color: black;
 }
 
 @page {

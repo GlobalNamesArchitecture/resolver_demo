@@ -4,12 +4,12 @@
 - content_for :scripts do
   %script{ :src => "javascript/compatibility.js", :type => "text/javascript" }
   %script{ :src => "javascript/l10n.js", :type => "text/javascript" }
-  %script{ :src => "javascript/build/pdfjs.min.js", :type => "text/javascript" }
+  %script{ :src => "javascript/build/pdf.min.js", :type => "text/javascript" }
   %script{ :src => "javascript/viewer.min.js", :type => "text/javascript" }
   %script{ :src => "javascript/viewer.reconciler.js", :type => "text/javascript" }
   :javascript
     kDefaultURL = "#{@upload[:file_path]}"
-    PDFJS.workerSrc = 'javascript/build/pdfjs.min.js'
+    PDFJS.workerSrc = 'javascript/build/pdf.js'
     $.extend(Reconciler.settings, { "token" : "#{@upload[:token]}" });
 
 #outerContainer

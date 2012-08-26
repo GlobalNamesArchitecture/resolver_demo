@@ -5,15 +5,15 @@ var PDFJS = {};
 
 (function pdfjsWrapper() {
   // Use strict in our context only - users might not want it
-  "use strict";
+  'use strict';
 
   PDFJS.build =
-'d38781d';
+'e0796ce';
 
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var globalScope = (typeof window === 'undefined') ? this : window;
 
@@ -578,7 +578,7 @@ var PDFDocument = (function PDFDocumentClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 // Use only for debugging purposes. This should not be used in any code that is
 // in mozilla master.
@@ -1866,7 +1866,7 @@ var WorkerTransport = (function WorkerTransportClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 // <canvas> contexts store most of the state we need natively.
 // However, PDF needs a bit more state, which we store here.
@@ -3168,7 +3168,7 @@ if (!isWorker) {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var Name = (function NameClosure() {
   function Name(name) {
@@ -4000,7 +4000,7 @@ var PDFObjects = (function PDFObjectsClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var PDFFunction = (function PDFFunctionClosure() {
   var CONSTRUCT_SAMPLED = 0;
@@ -4879,7 +4879,7 @@ var PostScriptLexer = (function PostScriptLexerClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var ISOAdobeCharset = [
   '.notdef', 'space', 'exclam', 'quotedbl', 'numbersign', 'dollar',
@@ -4985,7 +4985,7 @@ var ExpertSubsetCharset = [
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var CIDToUnicodeMaps = {
   'Adobe-Japan1': [[32, 160], {f: 12, c: 33}, [45, 8209], {f: 46, c: 46}, 165,
@@ -11919,7 +11919,7 @@ var CIDToUnicodeMaps = {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var ColorSpace = (function ColorSpaceClosure() {
   // Constructor should define this.numComps, this.defaultColor, this.name
@@ -12459,7 +12459,7 @@ var LabCS = (function LabCSClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var ARCFourCipher = (function ARCFourCipherClosure() {
   function ARCFourCipher(key) {
@@ -13110,7 +13110,7 @@ var CipherTransformFactory = (function CipherTransformFactoryClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var PartialEvaluator = (function PartialEvaluatorClosure() {
   function PartialEvaluator(xref, handler, uniquePrefix) {
@@ -13683,8 +13683,13 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
 
       var flags = properties.flags;
       var differences = [];
-      var baseEncoding = !!(flags & FontFlags.Symbolic) ?
-                         Encodings.symbolsEncoding : Encodings.StandardEncoding;
+      var baseEncoding = Encodings.StandardEncoding;
+      // The Symbolic attribute can be misused for regular fonts
+      // Heuristic: we have to check if the font is a standard one also
+      if (!!(flags & FontFlags.Symbolic)) {
+        baseEncoding = !properties.file ? Encodings.symbolsEncoding :
+                                          Encodings.MacRomanEncoding;
+      }
       var hasEncoding = dict.has('Encoding');
       if (hasEncoding) {
         var encoding = dict.get('Encoding');
@@ -14099,7 +14104,7 @@ var EvalState = (function EvalStateClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 /**
  * Maximum time to wait for a font to be loaded by font-face rules.
@@ -18198,7 +18203,7 @@ Type1Font.prototype = {
     // charstring changes size - can't cache .length in loop
     for (var i = 0; i < charstring.length; i++) {
       var command = charstring[i];
-      if (command.charAt) {
+      if (typeof command === 'string') {
         var cmd = map[command];
         assert(cmd, 'Unknow command: ' + command);
 
@@ -18719,7 +18724,7 @@ var CFFParser = (function CFFParserClosure() {
 
         var data = charstring;
         var length = data.length;
-        for (var j = 0; j <= length; j++) {
+        for (var j = 0; j <= length; j) {
           var value = data[j++];
           if (value == 12 && data[j++] == 0) {
               data[j - 2] = 139;
@@ -19600,7 +19605,7 @@ var CFFCompiler = (function CFFCompilerClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var GlyphsUnicode = {
   A: 0x0041,
@@ -23813,7 +23818,7 @@ var GlyphsUnicode = {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var PDFImage = (function PDFImageClosure() {
   /**
@@ -24159,6 +24164,10 @@ var PDFImage = (function PDFImageClosure() {
       var rowBytes = (originalWidth * numComps * bpc + 7) >> 3;
       var imgArray = this.getImageBytes(originalHeight * rowBytes);
 
+      // imgArray can be incomplete (e.g. after CCITT fax encoding)
+      var actualHeight = 0 | (imgArray.length / rowBytes *
+                         height / originalHeight);
+
       var comps = this.colorSpace.getRgbBuffer(
         this.getComponents(imgArray), bpc);
       if (originalWidth != width || originalHeight != height)
@@ -24167,7 +24176,7 @@ var PDFImage = (function PDFImageClosure() {
       var compsPos = 0;
       var opacity = this.getOpacity(width, height);
       var opacityPos = 0;
-      var length = width * height * 4;
+      var length = width * actualHeight * 4;
 
       for (var i = 0; i < length; i += 4) {
         buffer[i] = comps[compsPos++];
@@ -24216,7 +24225,7 @@ function loadJpegStream(id, imageData, objs) {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 // The Metrics object contains glyph widths (in glyph space units).
 // As per PDF spec, for most fonts (Type 3 being an exception) a glyph
@@ -27164,7 +27173,7 @@ var Metrics = {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var EOF = {};
 
@@ -27822,7 +27831,7 @@ var Linearization = (function LinearizationClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var PatternType = {
   AXIAL: 2,
@@ -28132,7 +28141,7 @@ var TilingPattern = (function TilingPatternClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var Stream = (function StreamClosure() {
   function Stream(arrayBuffer, start, length, dict) {
@@ -30471,7 +30480,7 @@ var LZWStream = (function LZWStreamClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 function MessageHandler(name, comObj) {
   this.name = name;
@@ -30605,12 +30614,10 @@ var WorkerMessageHandler = {
         {
           url: source.url,
           progress: function getPDFProgress(evt) {
-            if (evt.lengthComputable) {
-              handler.send('DocProgress', {
-                loaded: evt.loaded,
-                total: evt.total
-              });
-            }
+            handler.send('DocProgress', {
+              loaded: evt.loaded,
+              total: evt.lengthComputable ? evt.total : void(0)
+            });
           },
           error: function getPDFError(e) {
             handler.send('DocError', 'Unexpected server response of ' +
@@ -31701,7 +31708,7 @@ var JpegImage = (function jpegImage() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var JpxImage = (function JpxImageClosure() {
   // Table E.1
@@ -33576,7 +33583,7 @@ var JpxImage = (function JpxImageClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var Jbig2Image = (function Jbig2ImageClosure() {
 
@@ -34638,7 +34645,7 @@ var Jbig2Image = (function Jbig2ImageClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var bidi = PDFJS.bidi = (function bidiClosure() {
   // Character types for symbols from 0000 to 00FF.
@@ -35071,7 +35078,7 @@ var bidi = PDFJS.bidi = (function bidiClosure() {
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
-"use strict";
+'use strict';
 
 var Metadata = PDFJS.Metadata = (function MetadataClosure() {
   function fixMetadata(meta) {

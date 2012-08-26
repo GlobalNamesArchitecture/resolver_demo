@@ -692,7 +692,6 @@ var PDFView = {
       // Setting the default one.
       this.parseScale(kDefaultScale, true);
     }
-
   },
 
   renderHighestPriority: function pdfViewRenderHighestPriority() {
@@ -1832,6 +1831,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
       PDFView.sidebarOpen = outerContainer.classList.contains('sidebarOpen');
       PDFView.renderHighestPriority();
     });
+
 
   PDFView.open(file, 0);
 }, true);
