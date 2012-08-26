@@ -66,7 +66,7 @@ h1 {
 
 #description {
   display:block;
-  margin-top:20px;
+  margin:20px 0 20px 0;
 }
 
 #description a {

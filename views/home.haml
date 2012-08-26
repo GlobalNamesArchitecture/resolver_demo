@@ -10,7 +10,7 @@
             %div{:id => 'toolbarViewerMiddle', :class => 'innerCenter'}
     #viewerContainer
       #viewer
-        %h1 GlobalNames Resolution Demo
+        %h1 GlobalNames Resolution Demonstration
         #uploadForm
           - if flash[:notice]
             #flash_notice= flash[:notice]
@@ -30,7 +30,9 @@
             When a file is uploaded, behind the scenes it is sent to the
             = succeed " service." do
               %a{:href => 'http://gnrd.globalnames.org'} Global Names Recognition and Discovery 
-            Found names are then sent to the
+            Found scientific names are then sent to the
             = succeed "," do
               %a{:href => 'http://resolver.globalnames.org'} Global Names Resolver
-            to be reconciled against the comprehensive Union classification and names within the document are encoded to illustrate current usage.
+            to be reconciled against the comprehensive Union classification. If the PDF is text-based, names within the document are marked-up to illustrate current taxonomic usage.
+
+          %div WARNING: This application requires a modern browser because it uses HTML5 technologies.
