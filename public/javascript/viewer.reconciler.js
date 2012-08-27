@@ -29,20 +29,25 @@ $(function() {
       this.hideLoaders();
       return;
     }
-    setTimeout(function checkViewer() {
-      //TODO: still too late in process because highlight elements later interfere with proper rendering
-      if(PDFView.pages[0] === undefined) {
-        setTimeout(checkViewer, 50);
+
+    this.getNames(0);
+    this.activateNamesButton();
+
+    setTimeout(function checkStatus() {
+      var views = PDFView.getVisiblePages();
+      if(self.checkRenderingState(views)) {
+        self.highlightNames(views);
       } else {
-        self.activate();
+        setTimeout(checkStatus, 50);
       }
     }, 50);
   };
 
-  Reconciler.activate = function() {
-    // Possible solution to detect scroll: PDFView.watchScroll($('#viewerContainer')[0], {}, callback);
-    this.activateNamesButton();
-    this.getNames(0);
+  Reconciler.checkRenderingState = function(views) {
+    if(views !== undefined && views.views[0] !== undefined && views.views[0].view !== undefined && PDFView.isViewFinished(views.views[0].view)) {
+      return true;
+    }
+    return false;
   };
 
   Reconciler.activateNamesButton = function() {
@@ -70,7 +75,6 @@ $(function() {
         if(response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
-          self.highlightNames();
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -165,10 +169,8 @@ $(function() {
 
   };
 
-  Reconciler.highlightNames = function() {
-/* Commented out until can do it properly
-    $('#viewer').highlight(this.vars.verbatim, { element: 'div', className : 'highlight', wordsOnly : true });
-*/
+  Reconciler.highlightNames = function(visible) {
+    $('#' + visible.first.view.el.id).highlight(this.vars.verbatim, { element: 'div', className : 'highlight', wordsOnly : true }).css('background-color', '#000');
   };
 
   Reconciler.initialize();

@@ -69,12 +69,12 @@ h1 {
   margin:20px 0 20px 0;
 }
 
-#description a {
+#uploadForm a {
   text-decoration: none;
   color: #90CF4C;
 }
 
-#description a:hover {
+#uploadForm a:hover {
   color: rgb(126, 229, 44);
 }
 

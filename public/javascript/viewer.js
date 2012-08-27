@@ -1747,6 +1747,7 @@ var TextLayerBuilder = function textLayerBuilder(textLayerDiv) {
     textDiv.dataset.textLength = text.length;
     this.textDivs.push(textDiv);
   };
+
 };
 
 document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
