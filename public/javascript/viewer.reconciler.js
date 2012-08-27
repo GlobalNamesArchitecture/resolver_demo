@@ -36,7 +36,7 @@ $(function() {
     setTimeout(function checkStatus() {
       var views = PDFView.getVisiblePages();
       if(self.checkRenderingState(views)) {
-        self.highlightNames(views);
+        self.detectScroll();
       } else {
         setTimeout(checkStatus, 50);
       }
@@ -44,10 +44,15 @@ $(function() {
   };
 
   Reconciler.checkRenderingState = function(views) {
+    var self = this;
     if(views !== undefined && views.views[0] !== undefined && views.views[0].view !== undefined && PDFView.isViewFinished(views.views[0].view)) {
       return true;
     }
     return false;
+  };
+
+  Reconciler.detectScroll = function() {
+    window.addEventListener('scroll', this.highlightNames, true);
   };
 
   Reconciler.activateNamesButton = function() {
@@ -169,8 +174,14 @@ $(function() {
 
   };
 
-  Reconciler.highlightNames = function(visible) {
-    $('#' + visible.first.view.el.id).highlight(this.vars.verbatim, { element: 'div', className : 'highlight', wordsOnly : true }).css('background-color', '#000');
+  Reconciler.highlightNames = function() {
+    var current_page = {};
+    if(Reconciler.vars.verbatim.length > 0) {
+      current_page = PDFView.pages[window.currentPageNumber-1];
+      if(current_page.renderingState === 3 && $('.highlight', '#pageContainer' + window.currentPageNumber).length === 0) {
+        $('.textLayer', '#pageContainer' + window.currentPageNumber).unhighlight().highlight(Reconciler.vars.verbatim, { wordsOnly : true });
+      }
+    }
   };
 
   Reconciler.initialize();
