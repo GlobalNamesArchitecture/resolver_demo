@@ -4,6 +4,7 @@ development:
   user: root
   password:
   database: reconciliation_demo_dev
+  app_host: 0.0.0.0
   salt: substitute_with_your_secret_salt_string
   gnrd_url: http://gnrd.globalnames.org/name_finder.json
   resolver_url: http://resolver.globalnames.org/name_resolvers.json
@@ -14,6 +15,7 @@ test:
   user: root
   password:
   database: reconciliation_demo_test
+  app_host: 0.0.0.0
   salt: substitute_with_your_secret_salt_string
   gnrd_url: http://gnrd.globalnames.org/name_finder.json
   resolver_url: http://resolver.globalnames.org/name_resolvers.json
@@ -24,6 +26,7 @@ production:
   user: root
   password:
   database: reconciliation_demo
+  app_host: 0.0.0.0
   salt: substitute_with_your_secret_salt_string
   gnrd_url: http://gnrd.globalnames.org/name_finder.json
   resolver_url: http://resolver.globalnames.org/name_resolvers.json

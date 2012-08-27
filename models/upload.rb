@@ -28,7 +28,7 @@ class Upload < ActiveRecord::Base
 
     file_name = file_path.split("/")[1]
     params = { :file => File.new(File.join(SiteConfig::upload_path, file_name)), :verbatim => true, :detect_language => false }
-    res = RestClient.post(SiteConfig::gnrd_url, params) do |response, request, result, &block|
+    r = RestClient.post(SiteConfig::gnrd_url, params) do |response, request, result, &block|
       if [302, 303].include? response.code
         save_location(response.headers[:location])
       else
@@ -52,17 +52,18 @@ class Upload < ActiveRecord::Base
     set_status(Upload::STATUS[:find_busy])
     response = nil
     counter = 0
+    r = nil
     while counter <= 15
       sleep(5)
-      response = JSON.parse(RestClient.get(gnrd_url), :symbolize_names => true)[:names] rescue set_status(Upload::STATUS[:failed])
-      break if response
+      r = JSON.parse(RestClient.get(gnrd_url), :symbolize_names => true)[:names] rescue set_status(Upload::STATUS[:failed])
+      break if r
       counter += 1
     end
-    response.nil? ? set_status(Upload::STATUS[:failed]) : save_found_names(response)
+    r.nil? ? set_status(Upload::STATUS[:failed]) : save_found_names(r)
   end
   
-  def save_found_names(response)
-    names = response.map { |i| i[:identifiedName] }.uniq || []
+  def save_found_names(r)
+    names = r.map { |i| i[:identifiedName] }.uniq || []
     self.found_names = { :found_names => names }
     if names.empty?
       self.resolved_names = { :data => [] }
@@ -77,22 +78,26 @@ class Upload < ActiveRecord::Base
     set_status(Upload::STATUS[:resolve_sent])
     names = found_names[:found_names].join("\n")
     params = { :data => names, :data_source_ids => SiteConfig::union_id, :with_context => true }
-    response = JSON.parse(RestClient.post(SiteConfig::resolver_url, params), :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
-    clean_resolved_names(response) if response
+    resource = RestClient::Resource.new(SiteConfig::resolver_url, timeout: 9_000_000, open_timeout: 9_000_000, connection: "Keep-Alive")
+    r = resource.post(params)
+    r = JSON.parse(r, :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
+    if r && r[:data]
+      clean_resolved_names(r)
+    end
   end
   
-  def clean_resolved_names(response)
+  def clean_resolved_names(r)
     data = []
-    response[:data].each do |name|
+    r[:data].each do |name|
       data << name if name.has_key?(:results)
     end
-    response[:data] = data
-    save_resolved_names(response)
+    r[:data] = data
+    save_resolved_names(r)
   end
   
-  def save_resolved_names(response)
+  def save_resolved_names(r)
     self.status = Upload::STATUS[:resolved]
-    self.resolved_names = response
+    self.resolved_names = r
     self.save!
   end
   

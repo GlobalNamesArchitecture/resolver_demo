@@ -16,7 +16,7 @@ end
 
 Capybara.configure do |config|
   config.app = ReconciliationDemo
-  config.app_host = "http://#{SiteConfig.host}:#{config.app.port}"
+  config.app_host = "http://#{SiteConfig.app_host}:#{config.app.port}"
   config.javascript_driver = :webkit
   config.default_driver = :webkit
 end

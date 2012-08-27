@@ -20,6 +20,7 @@ root_path = File.expand_path(File.dirname(__FILE__))
 conf = YAML.load(open(File.join(root_path, 'config.yml')).read)[environment.to_s]
 configure do
   SiteConfig = OpenStruct.new(
+                 :app_host => conf.delete('app_host') || '0.0.0.0',
                  :root_path => root_path,
                  :upload_path => File.join(root_path, "public", "uploads"),
                  :salt => conf.delete('salt') || '',
