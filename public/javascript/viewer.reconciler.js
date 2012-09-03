@@ -35,7 +35,7 @@ $(function() {
 
     setTimeout(function checkStatus() {
       var views = PDFView.getVisiblePages();
-      if(self.checkRenderingState(views)) {
+      if(self.checkRenderingState()) {
         self.detectScroll();
       } else {
         setTimeout(checkStatus, 50);
@@ -43,12 +43,12 @@ $(function() {
     }, 50);
   };
 
-  Reconciler.checkRenderingState = function(views) {
-    var self = this;
-    if(views !== undefined && views.views[0] !== undefined && views.views[0].view !== undefined && PDFView.isViewFinished(views.views[0].view)) {
-      return true;
-    }
-    return false;
+  Reconciler.checkRenderingState = function() {
+   if(PDFView.textRenderingDone) {
+     this.highlightNames();
+     return true;
+   }
+   return false;
   };
 
   Reconciler.detectScroll = function() {
@@ -135,7 +135,6 @@ $(function() {
     $.each(response.data, function() {
       if($.inArray(this.supplied_name_string, self.vars.verbatim) === -1) { self.vars.verbatim.push(this.supplied_name_string); }
     });
-    this.vars.verbatim.sort(this.compareStringLengths);
     this.vars.names_found = true;
   };
 
@@ -179,7 +178,7 @@ $(function() {
     if(Reconciler.vars.verbatim.length > 0) {
       current_page = PDFView.pages[window.currentPageNumber-1];
       if(current_page.renderingState === 3 && $('.highlight', '#pageContainer' + window.currentPageNumber).length === 0) {
-        $('.textLayer', '#pageContainer' + window.currentPageNumber).unhighlight().highlight(Reconciler.vars.verbatim, { wordsOnly : true });
+        $('.textLayer', '#pageContainer' + window.currentPageNumber).unhighlight().highlight(Reconciler.vars.verbatim.sort(Reconciler.compareStringLengths), { wordsOnly : true });
       }
     }
   };
