@@ -76,7 +76,7 @@ class ReconciliationDemo < Sinatra::Base
   end
 
   after do
-    Cleaner.run
+    #Cleaner.run  NOTE: commented out until we have a strategy to deal with files
     ActiveRecord::Base.clear_active_connections!
   end
 
