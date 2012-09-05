@@ -12,8 +12,9 @@ $(function() {
     "find_busy"    : 2,
     "found"        : 3,
     "resolve_sent" : 4,
-    "resolved"     : 5,
-    "failed"       : 6
+    "resolve_busy" : 5,
+    "resolved"     : 6,
+    "failed"       : 7
   };
 
   Reconciler.vars = {
@@ -112,6 +113,7 @@ $(function() {
         setTimeout(function() { self.getNames(0); }, self.vars.timeout);
         break;
       case this.status.resolve_sent:
+      case this.status.resolve_busy:
         text = mozL10n.get('resolving_names', null, 'Resolving names...');
         loader.text(text);
         viewer.text(text);

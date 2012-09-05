@@ -4,6 +4,7 @@ class CreateUploads < ActiveRecord::Migration
       t.string  :token
       t.string  :file_path
       t.string  :gnrd_url
+      t.string  :resolver_url
       t.text    :found_names
       t.text    :resolved_names
       t.integer :status, :default => 0

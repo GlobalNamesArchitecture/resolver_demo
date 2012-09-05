@@ -3,7 +3,7 @@
 class Upload < ActiveRecord::Base
   after_create :initiate_data
   
-  STATUS = { init: 0, find_sent: 1, find_busy: 2, found: 3, resolve_sent: 4, resolved: 5, failed: 6 }
+  STATUS = { init: 0, find_sent: 1, find_busy: 2, found: 3, resolve_sent: 4, resolve_busy: 5, resolved: 6, failed: 7 }
   
   serialize :found_names, Hash
   serialize :resolved_names, Hash
@@ -14,7 +14,7 @@ class Upload < ActiveRecord::Base
 
   def get_names
     find_names if status == Upload::STATUS[:find_sent]
-    resolve_names if status == Upload::STATUS[:found]
+    resolve_names if (status == Upload::STATUS[:found] || status == Upload::STATUS[:resolve_sent] || status == Upload::STATUS[:resolve_busy])
     output
   end
 
@@ -25,21 +25,25 @@ class Upload < ActiveRecord::Base
     while token.match(/[_-]/)
       self.token = self.class.generate_token
     end
-
     file_name = file_path.split("/")[1]
     params = { :file => File.new(File.join(SiteConfig::upload_path, file_name)), :verbatim => true, :detect_language => false }
     r = RestClient.post(SiteConfig::gnrd_url, params) do |response, request, result, &block|
       if [302, 303].include? response.code
-        save_location(response.headers[:location])
+        save_gnrd_location(response.headers[:location])
       else
         set_status(Upload::STATUS[:failed])
       end
     end
   end
 
-  def save_location(location)
+  def save_gnrd_location(location)
     self.gnrd_url = location
     self.status = Upload::STATUS[:find_sent]
+    self.save!
+  end
+
+  def save_resolver_location(location)
+    self.resolver_url = location
     self.save!
   end
 
@@ -50,7 +54,6 @@ class Upload < ActiveRecord::Base
 
   def find_names
     set_status(Upload::STATUS[:find_busy])
-    response = nil
     counter = 0
     r = nil
     while counter <= 15
@@ -75,14 +78,26 @@ class Upload < ActiveRecord::Base
   end
   
   def resolve_names
-    set_status(Upload::STATUS[:resolve_sent])
-    names = found_names[:found_names].join("\n")
-    params = { :data => names, :data_source_ids => SiteConfig::union_id, :with_context => true }
-    resource = RestClient::Resource.new(SiteConfig::resolver_url, timeout: 9_000_000, open_timeout: 9_000_000, connection: "Keep-Alive")
-    r = resource.post(params)
-    r = JSON.parse(r, :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
-    if r && r[:data]
-      clean_resolved_names(r)
+    return if !resolver_url && status == Upload::STATUS[:resolve_busy]
+    if status == Upload::STATUS[:resolve_busy]
+      counter = 0
+      r = nil
+      while counter <= 15
+        sleep(5)
+        r = JSON.parse(RestClient.get(resolver_url), :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
+        break if r[:data]
+        counter += 1
+      end
+      r.nil? ? set_status(Upload::STATUS[:failed]) : clean_resolved_names(r)
+    else
+      set_status(Upload::STATUS[:resolve_busy])
+      names = found_names[:found_names].join("\n")
+      params = { :data => names, :data_source_ids => SiteConfig::union_id, :with_context => true }
+      resource = RestClient::Resource.new(SiteConfig::resolver_url, timeout: 9_000_000, open_timeout: 9_000_000, connection: "Keep-Alive")
+      r = resource.post(params)
+      r = JSON.parse(r, :symbolize_names => true) rescue set_status(Upload::STATUS[:failed])
+      save_resolver_location(r[:url])
+      clean_resolved_names(r) if r[:data]
     end
   end
   
@@ -97,6 +112,7 @@ class Upload < ActiveRecord::Base
   
   def save_resolved_names(r)
     self.status = Upload::STATUS[:resolved]
+    self.resolver_url = r[:url]
     self.resolved_names = r
     self.save!
   end
