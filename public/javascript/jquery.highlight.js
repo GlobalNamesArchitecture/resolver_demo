@@ -51,7 +51,7 @@ jQuery.extend({
                 var highlight = document.createElement(nodeName || 'span');
                 highlight.className = className || 'highlight';
                 var wordNode = node.splitText(match.index);
-                wordNode.splitText(match[0].length);
+                wordNode.splitText(match[0].length); //TODO: This is splitting words
                 var wordClone = wordNode.cloneNode(true);
                 highlight.appendChild(wordClone);
                 wordNode.parentNode.replaceChild(highlight, wordNode);

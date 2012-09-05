@@ -20,7 +20,8 @@ $(function() {
   Reconciler.vars = {
     timeout     : 5000,
     names_found : false,
-    verbatim    : []
+    verbatim    : [],
+    highlighted : []
   };
 
   Reconciler.initialize = function() {
@@ -35,9 +36,10 @@ $(function() {
     this.activateNamesButton();
 
     setTimeout(function checkStatus() {
-      var views = PDFView.getVisiblePages();
-      if(self.checkRenderingState()) {
-        self.detectScroll();
+      if(self.checkRenderingState() && self.vars.names_found) {
+        $.each(PDFView.pages, function() { self.vars.highlighted[this.id] = false; });
+        self.highlightNames();
+        window.addEventListener('scroll', self.detectScroll, true);
       } else {
         setTimeout(checkStatus, 50);
       }
@@ -45,15 +47,14 @@ $(function() {
   };
 
   Reconciler.checkRenderingState = function() {
-   if(PDFView.textRenderingDone) {
-     this.highlightNames();
+   if(PDFView.textRenderingDone[window.currentPageNumber]) {
      return true;
    }
    return false;
   };
 
   Reconciler.detectScroll = function() {
-    window.addEventListener('scroll', this.highlightNames, true);
+    if(Reconciler.checkRenderingState()) { Reconciler.highlightNames(); }
   };
 
   Reconciler.activateNamesButton = function() {
@@ -137,6 +138,7 @@ $(function() {
     $.each(response.data, function() {
       if($.inArray(this.supplied_name_string, self.vars.verbatim) === -1) { self.vars.verbatim.push(this.supplied_name_string); }
     });
+    this.vars.verbatim.sort(this.compareStringLengths);
     this.vars.names_found = true;
   };
 
@@ -148,6 +150,7 @@ $(function() {
 
   Reconciler.renderNames = function() {
     var self = this,
+        names        = self.vars.verbatim.slice(),
         namesButton  = $('#viewNames'),
         namesView    = $('#namesView'),
         searchPanel  = $('#viewSearch'),
@@ -160,7 +163,7 @@ $(function() {
       return;
     }
 
-    $.each(self.vars.verbatim.sort(), function() {
+    $.each(names.sort(), function() {
       item = $('<a href="#">' + this + '</a>');
       namesView.append(item);
       $(item).click(function(e) {
@@ -176,12 +179,9 @@ $(function() {
   };
 
   Reconciler.highlightNames = function() {
-    var current_page = {};
-    if(Reconciler.vars.verbatim.length > 0) {
-      current_page = PDFView.pages[window.currentPageNumber-1];
-      if(current_page.renderingState === 3 && $('.highlight', '#pageContainer' + window.currentPageNumber).length === 0) {
-        $('.textLayer', '#pageContainer' + window.currentPageNumber).unhighlight().highlight(Reconciler.vars.verbatim.sort(Reconciler.compareStringLengths), { wordsOnly : true });
-      }
+    if(this.vars.verbatim.length > 0 && !this.vars.highlighted[window.currentPageNumber]) {
+      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.verbatim, { wordsOnly : true });
+      this.vars.highlighted[window.currentPageNumber] = true;
     }
   };
 
