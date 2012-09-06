@@ -20,7 +20,7 @@ $(function() {
   Reconciler.vars = {
     timeout     : 5000,
     names_found : false,
-    verbatim    : [],
+    names       : [],
     highlighted : []
   };
 
@@ -82,6 +82,7 @@ $(function() {
         if(response.status === self.status.resolved) {
           self.buildNames(response);
           self.renderNames();
+          self.buildLink(response);
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -136,9 +137,9 @@ $(function() {
     var self = this;
 
     $.each(response.data, function() {
-      if($.inArray(this.supplied_name_string, self.vars.verbatim) === -1) { self.vars.verbatim.push(this.supplied_name_string); }
+      if($.inArray(this.supplied_name_string, self.vars.names) === -1) { self.vars.names.push(this.supplied_name_string); }
     });
-    this.vars.verbatim.sort(this.compareStringLengths);
+    this.vars.names.sort(this.compareStringLengths);
     this.vars.names_found = true;
   };
 
@@ -150,7 +151,7 @@ $(function() {
 
   Reconciler.renderNames = function() {
     var self = this,
-        names        = self.vars.verbatim.slice(),
+        names        = self.vars.names.slice(),
         namesButton  = $('#viewNames'),
         namesView    = $('#namesView'),
         searchPanel  = $('#viewSearch'),
@@ -158,7 +159,7 @@ $(function() {
         searchButton = $('#searchButton'),
         item = '';
 
-    if(self.vars.verbatim.length === 0) {
+    if(self.vars.names.length === 0) {
       namesView.find(".noResults").eq(0).show();
       return;
     }
@@ -178,9 +179,15 @@ $(function() {
 
   };
 
+  Reconciler.buildLink = function(response) {
+    var link = '<a href="' + response.url.replace(".json", "") + '" target="_blank">' + mozL10n.get('resolved_link', null, 'Names Details') + '</a>'
+
+    $('#nameLoader').html(link).removeClass("loader").show();
+  };
+
   Reconciler.highlightNames = function() {
-    if(this.vars.verbatim.length > 0 && !this.vars.highlighted[window.currentPageNumber]) {
-      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.verbatim, { wordsOnly : true });
+    if(this.vars.names.length > 0 && !this.vars.highlighted[window.currentPageNumber]) {
+      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.names, { wordsOnly : true });
       this.vars.highlighted[window.currentPageNumber] = true;
     }
   };

@@ -60,7 +60,7 @@
 
           #toolbarViewerRight
             %input{:id => 'fileInput', :class => 'fileInput', :type => 'file', :oncontextmenu => 'return false;', :style => 'visibility: hidden; position: fixed; right: 0; top: 0'}
-            %span{:id => 'nameLoader', :class => 'toolbarLabel'} Finding names...
+            %span{:id => 'nameLoader', :class => 'toolbarLabel loader'} Finding names...
             %span{:id => 'nameLoaderFailed', :class => 'toolbarLabel'} Names resolution failed
             %button{:id => 'fullscreen', :class => 'toolbarButton fullscreen', :title => 'Fullscreen', :tabindex => '12', :onclick => 'PDFView.fullscreen();'}
               %span Fullscreen
