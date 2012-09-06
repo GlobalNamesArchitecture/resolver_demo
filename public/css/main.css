@@ -87,6 +87,15 @@ h1 {
  display:inline !important;
 }
 
+.synonymized {
+  background-color:#ff0000;
+}
+
+.ui-tooltip-content {
+  white-space:nowrap;
+  margin:5px;
+}
+
 #nameLoader {
   margin-right:20px;
   padding-left:20px;

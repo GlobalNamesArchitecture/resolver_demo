@@ -21,6 +21,7 @@ $(function() {
     timeout     : 5000,
     names_found : false,
     names       : [],
+    names_data  : {},
     highlighted : []
   };
 
@@ -34,10 +35,11 @@ $(function() {
 
     this.getNames(0);
     this.activateNamesButton();
+    this.detectZoom();
 
     setTimeout(function checkStatus() {
       if(self.checkRenderingState() && self.vars.names_found) {
-        $.each(PDFView.pages, function() { self.vars.highlighted[this.id] = false; });
+        self.resetHighlightState();
         self.highlightNames();
         window.addEventListener('scroll', self.detectScroll, true);
       } else {
@@ -53,8 +55,29 @@ $(function() {
    return false;
   };
 
+  Reconciler.detectZoom = function() {
+    var self = this;
+
+    $('#scaleSelect').change(function() {
+      self.resetHighlightState();
+      setTimeout(function checkStatus() {
+        if(self.checkRenderingState()) {
+          self.highlightNames();
+        } else {
+          setTimeout(checkStatus, 50);
+        }
+      }, 50);
+    });
+  };
+
   Reconciler.detectScroll = function() {
     if(Reconciler.checkRenderingState()) { Reconciler.highlightNames(); }
+  };
+
+  Reconciler.resetHighlightState = function() {
+    var self = this;
+
+    $.each(PDFView.pages, function() { self.vars.highlighted[this.id] = false; });
   };
 
   Reconciler.activateNamesButton = function() {
@@ -81,8 +104,8 @@ $(function() {
         self.updateStatus(response.status);
         if(response.status === self.status.resolved) {
           self.buildNames(response);
-          self.renderNames();
           self.buildLink(response);
+          self.renderNames();
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -137,6 +160,7 @@ $(function() {
     var self = this;
 
     $.each(response.data, function() {
+      self.vars.names_data[this.supplied_name_string] = this.results[0];
       if($.inArray(this.supplied_name_string, self.vars.names) === -1) { self.vars.names.push(this.supplied_name_string); }
     });
     this.vars.names.sort(this.compareStringLengths);
@@ -186,8 +210,15 @@ $(function() {
   };
 
   Reconciler.highlightNames = function() {
+    var self = this, name_data;
+
     if(this.vars.names.length > 0 && !this.vars.highlighted[window.currentPageNumber]) {
-      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.names, { wordsOnly : true });
+      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.names, { wordsOnly : true }).find(".highlight").each(function() {
+        name_data = self.vars.names_data[$(this).text().replace(/\u00a0/g, " ")];
+        if(name_data && name_data.current_name_string) {
+          $(this).addClass("synonymized").attr("title", name_data.current_name_string).qtip({ content : { title : { text : mozL10n.get('current_name', null, 'Current Name'), button : true } }, hide : false, style : { classes : 'ui-tooltip-dark ui-tooltip-rounded' } });
+        }
+      });
       this.vars.highlighted[window.currentPageNumber] = true;
     }
   };
