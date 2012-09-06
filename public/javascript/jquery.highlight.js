@@ -46,12 +46,12 @@
 jQuery.extend({
     highlight: function (node, re, nodeName, className) {
         if (node.nodeType === 3) {
-            var match = node.data.match(re);
+            var match = node.data.replace(/\u00a0/g, " ").match(re);
             if (match) {
                 var highlight = document.createElement(nodeName || 'span');
                 highlight.className = className || 'highlight';
                 var wordNode = node.splitText(match.index);
-                wordNode.splitText(match[0].length); //TODO: This is splitting words
+                wordNode.splitText(match[0].length);
                 var wordClone = wordNode.cloneNode(true);
                 highlight.appendChild(wordClone);
                 wordNode.parentNode.replaceChild(highlight, wordNode);
@@ -90,7 +90,7 @@ jQuery.fn.highlight = function (words, options) {
       return word != '';
     });
     words = jQuery.map(words, function(word, i) {
-      return word.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      return word.replace(/[-\[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     });
     if (words.length == 0) { return this; };
 

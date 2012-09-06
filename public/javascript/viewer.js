@@ -1682,7 +1682,6 @@ var TextLayerBuilder = function textLayerBuilder(textLayerDiv, id) {
 
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
-
     // Render the text layer, one div at a time
     function renderTextLayer() {
       if (textDivs.length === 0) {
