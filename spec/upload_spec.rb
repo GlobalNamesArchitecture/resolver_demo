@@ -38,7 +38,7 @@ JAVASCRIPT
       name = html.find(names_viewer).text.include? "Bulimulus"
     end
     find(names_viewer).text.should include("Bulimulus")
-    find(names_loader).visible?.should be_false
+    find(names_loader).should have_content("Names Details")
   end
   
 end
