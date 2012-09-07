@@ -35,28 +35,12 @@ $(function() {
 
     this.getNames(0);
     this.activateNamesButton();
-
-    window.addEventListener('textrender', function textRendered(evt) {
-        self.resetHighlightState();
-        self.highlightNames(evt.renderingDone);
-    });
+    this.addListener();
   };
 
-  Reconciler.resetHighlightState = function() {
-    var self = this;
-
-    $.each(PDFView.pages, function() { self.vars.highlighted[this.id] = false; });
-  };
-
-  Reconciler.activateNamesButton = function() {
-    $.each($('#toolbarSidebar').children(), function(i) {
-      $(this).click(function(e) {
-        e.preventDefault();
-        if($(this).attr("id") === 'viewNames') { PDFView.extractText(); }
-        $(this).addClass('toggled').siblings().removeClass('toggled');
-        $('#sidebarContent').children().eq(i).show().siblings().hide();
-      });
-    });
+  Reconciler.hideLoaders = function() {
+    $('#nameLoader').hide();
+    $('#namesView').find(".looking").hide();
   };
 
   Reconciler.getNames = function(counter) {
@@ -74,6 +58,9 @@ $(function() {
           self.buildNames(response);
           self.buildLink(response);
           self.renderNames();
+          $.each(PDFView.pages, function() {
+            if(!self.vars.highlighted[this.id]) { self.highlightNames(this.id); }
+          });
         }
       },
       error : function(xhr, ajaxOptions, thrownError) {
@@ -82,10 +69,36 @@ $(function() {
           counter += 1;
           self.getNames(counter);
         } else {
-          self.updateStatus(Reconciler.status.failed);
+          self.updateStatus(self.status.failed);
         }
       }
     });
+  };
+
+  Reconciler.activateNamesButton = function() {
+    $.each($('#toolbarSidebar').children(), function(i) {
+      $(this).click(function(e) {
+        e.preventDefault();
+        if($(this).attr("id") === 'viewNames') { PDFView.extractText(); }
+        $(this).addClass('toggled').siblings().removeClass('toggled');
+        $('#sidebarContent').children().eq(i).show().siblings().hide();
+      });
+    });
+  };
+
+  Reconciler.addListener = function() {
+    var self = this;
+
+    window.addEventListener('textrender', function textRendered(evt) {
+      self.resetHighlightState();
+      self.highlightNames(evt.renderingDone);
+    });
+  };
+
+  Reconciler.resetHighlightState = function() {
+    var self = this;
+
+    $.each(PDFView.pages, function() { self.vars.highlighted[this.id] = false; });
   };
 
   Reconciler.updateStatus = function(status) {
