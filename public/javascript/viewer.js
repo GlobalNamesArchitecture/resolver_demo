@@ -184,7 +184,6 @@ var PDFView = {
   pageViewScroll: null,
   thumbnailViewScroll: null,
   isFullscreen: false,
-  textRenderingDone: [],
   previousScale: null,
 
   // called once when the document is loaded
@@ -1663,10 +1662,13 @@ var CustomStyle = (function CustomStyleClosure() {
 })();
 
 var TextLayerBuilder = function textLayerBuilder(textLayerDiv, id) {
+  var event = document.createEvent('UIEvents');
+  event.initUIEvent('textrender', false, false, window, 0);
+  event.renderingDone = id;
+
   this.textLayerDiv = textLayerDiv;
 
   this.beginLayout = function textLayerBuilderBeginLayout() {
-    PDFView.textRenderingDone[id] = false;
     this.textDivs = [];
     this.textLayerQueue = [];
   };
@@ -1687,7 +1689,7 @@ var TextLayerBuilder = function textLayerBuilder(textLayerDiv, id) {
       if (textDivs.length === 0) {
         clearInterval(renderTimer);
         renderingDone = true;
-        PDFView.textRenderingDone[id] = true;
+        window.dispatchEvent(event);
         self.textLayerDiv = textLayerDiv = canvas = ctx = null;
         return;
       }

@@ -35,43 +35,11 @@ $(function() {
 
     this.getNames(0);
     this.activateNamesButton();
-    this.detectZoom();
 
-    setTimeout(function checkStatus() {
-      if(self.checkRenderingState() && self.vars.names_found) {
+    window.addEventListener('textrender', function textRendered(evt) {
         self.resetHighlightState();
-        self.highlightNames();
-        window.addEventListener('scroll', self.detectScroll, true);
-      } else {
-        setTimeout(checkStatus, 50);
-      }
-    }, 50);
-  };
-
-  Reconciler.checkRenderingState = function() {
-   if(PDFView.textRenderingDone[window.currentPageNumber]) {
-     return true;
-   }
-   return false;
-  };
-
-  Reconciler.detectZoom = function() {
-    var self = this;
-
-    $('#scaleSelect').change(function() {
-      self.resetHighlightState();
-      setTimeout(function checkStatus() {
-        if(self.checkRenderingState()) {
-          self.highlightNames();
-        } else {
-          setTimeout(checkStatus, 50);
-        }
-      }, 50);
+        self.highlightNames(evt.renderingDone);
     });
-  };
-
-  Reconciler.detectScroll = function() {
-    if(Reconciler.checkRenderingState()) { Reconciler.highlightNames(); }
   };
 
   Reconciler.resetHighlightState = function() {
@@ -209,17 +177,17 @@ $(function() {
     $('#nameLoader').html(link).removeClass("loader").show();
   };
 
-  Reconciler.highlightNames = function() {
+  Reconciler.highlightNames = function(id) {
     var self = this, name_data;
 
-    if(this.vars.names.length > 0 && !this.vars.highlighted[window.currentPageNumber]) {
-      $('.textLayer', '#pageContainer' + window.currentPageNumber).highlight(this.vars.names, { wordsOnly : true }).find(".highlight").each(function() {
+    if(this.vars.names.length > 0 && !this.vars.highlighted[id]) {
+      $('.textLayer', '#pageContainer' + id).highlight(this.vars.names, { wordsOnly : true }).find(".highlight").each(function() {
         name_data = self.vars.names_data[$(this).text().replace(/\u00a0/g, " ")];
         if(name_data && name_data.current_name_string) {
           $(this).addClass("synonymized").attr("title", name_data.current_name_string).qtip({ content : { title : { text : mozL10n.get('current_name', null, 'Current Name'), button : true } }, hide : false, style : { classes : 'ui-tooltip-dark ui-tooltip-rounded' } });
         }
       });
-      this.vars.highlighted[window.currentPageNumber] = true;
+      this.vars.highlighted[id] = true;
     }
   };
 

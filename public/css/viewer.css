@@ -760,9 +760,9 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 }
 
 #thumbnailView {
-  position: fixed;
+  position: absolute;
   width: 120px;
-  top: 33px;
+  top: 0px;
   bottom: 0;
   padding: 10px 40px 0;
   overflow: auto;
@@ -825,9 +825,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing,
 }
 
 #outlineView {
-  position: fixed;
+  position: absolute;
   width: 192px;
-  top: 33px;
+  top: 0px;
   bottom: 0;
   padding: 4px 4px 0;
   overflow: auto;
