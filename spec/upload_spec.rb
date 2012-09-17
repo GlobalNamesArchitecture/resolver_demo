@@ -12,7 +12,7 @@ describe Upload do
     find("#file").should be_true
     file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_file.pdf')
     attach_file "file", file_path
-    click_button "Resolve Names"
+    click_button "Reconcile Names"
     page.should have_content("Congratulations")
     page.should have_content("Yukon")
   end
@@ -22,7 +22,7 @@ describe Upload do
     find("#file").should be_true
     file_path = File.join(SiteConfig.root_path, 'spec', 'files', 'dummy_with_names.pdf')
     attach_file "file", file_path
-    click_button "Resolve Names"
+    click_button "Reconcile Names"
     names_loader = "#nameLoader"
     names_viewer = "#namesView"
     find(names_loader).should have_content("Finding names...")

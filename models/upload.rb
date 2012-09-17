@@ -78,6 +78,7 @@ class Upload < ActiveRecord::Base
   end
   
   def resolve_names
+    #TODO: ideally, need this to work off a queue because loss of state will result in perpetual business
     return if !resolver_url && status == Upload::STATUS[:resolve_busy]
     if status == Upload::STATUS[:resolve_busy]
       counter = 0

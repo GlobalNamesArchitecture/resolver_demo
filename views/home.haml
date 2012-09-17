@@ -10,7 +10,7 @@
             %div{:id => 'toolbarViewerMiddle', :class => 'innerCenter'}
     #viewerContainer
       #viewer
-        %h1 GlobalNames Resolution Demonstration
+        %h1 GlobalNames Taxonomic Reconciliation Demonstration
         #uploadForm
           - if flash[:notice]
             #flash_notice= flash[:notice]
@@ -24,7 +24,7 @@
               %label{:for => 'file'} PDF
               %input{:type => :file, :name => "file", :id => :file, :size => 30}
             %div
-              %input{:class => 'submit-button green-submit', :type => :submit, :value => "Resolve Names"}
+              %input{:class => 'submit-button green-submit', :type => :submit, :value => "Reconcile Names"}
 
           #description
             Uploaded PDFs are sent to the
