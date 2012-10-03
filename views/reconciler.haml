@@ -66,8 +66,12 @@
             %span{:id => 'nameLoaderFailed', :class => 'toolbarLabel'} Names resolution failed
             %button{:id => 'fullscreen', :class => 'toolbarButton fullscreen', :title => 'Fullscreen', :tabindex => '12', :onclick => 'PDFView.fullscreen();'}
               %span Fullscreen
+            %button{:id => 'openFile', :class => 'toolbarButton openFile hidden', :title => 'Open File', :tabindex => '12'}
+              %span Open
             %button{:id => 'print', :class => 'toolbarButton print', :title => 'Print', :tabindex => '13', :onclick => 'window.print();'}
               %span Print
+            %button{:id => 'download', :class => 'toolbarButton download hidden', :title => 'Download', :tabindex => '14'}
+              %span Download
             %a{:href => '#', :id => 'viewBookmark', :class => 'toolbarButton bookmark', :title => 'Current view (copy or open in new window)', :tabindex => '14'}
               %span Current View
 
@@ -94,6 +98,10 @@
                   %option{:value => '1.25'} 125%
                   %option{:value => '1.5'} 150%
                   %option{:value => '2'} 200%
+
+    %menu{:type => 'context', :id => 'viewerContectMenu' }
+      %menuitem{:label => 'Rotate Counter-Clockwise', :id => 'page_rotate_ccw'}
+      %menuitem{:label => 'Rotate Clockwise', :id => 'page_rotate_cw' }
 
     #viewerContainer
       #viewer
